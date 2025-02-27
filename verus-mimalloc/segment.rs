@@ -132,19 +132,19 @@ fn segments_page_alloc(
         } else {
             assert(page_size < block_size * 0x10000);
         }*/
-        assert(good_count_for_block_size(block_size as int, slices_needed as int));
+//        assert(good_count_for_block_size(block_size as int, slices_needed as int));
     }
 
     proof {
-        assert(page_size == slices_needed * SLICE_SIZE as nat) by {
-            assert(MEDIUM_PAGE_SIZE as int % SLICE_SIZE as int == 0);
-            assert(SLICE_SIZE as int % SLICE_SIZE as int == 0);
-            assert(alignment as int % SLICE_SIZE as int == 0);
-            assert(page_size as int % alignment as int == 0);
-            mod_trans(page_size as int, alignment as int, SLICE_SIZE as int);
-            assert(page_size as int % SLICE_SIZE as int == 0);
-        }
-        assert(1 <= slices_needed <= SLICES_PER_SEGMENT);
+//        assert(page_size == slices_needed * SLICE_SIZE as nat) by {
+////            assert(MEDIUM_PAGE_SIZE as int % SLICE_SIZE as int == 0);
+////            assert(SLICE_SIZE as int % SLICE_SIZE as int == 0);
+////            assert(alignment as int % SLICE_SIZE as int == 0);
+////            assert(page_size as int % alignment as int == 0);
+//            mod_trans(page_size as int, alignment as int, SLICE_SIZE as int);
+////            assert(page_size as int % SLICE_SIZE as int == 0);
+//        }
+//        assert(1 <= slices_needed <= SLICES_PER_SEGMENT);
     }
 
     let page_ptr = segments_page_find_and_allocate(slices_needed, tld,
@@ -251,13 +251,13 @@ fn segments_page_find_and_allocate(
                 page_ptr: slice_ptr,
                 page_id: Ghost(slice_page_id.get_Some_0())
             };
-            assert(slice.wf());
+//            assert(slice.wf());
 
             let found_slice_count = slice.get_count(Tracked(&*local)) as usize;
             if found_slice_count >= slice_count {
                 let segment = SegmentPtr::ptr_segment(slice);
 
-                assert(tld_ptr.is_in(*local));
+//                assert(tld_ptr.is_in(*local));
                 span_queue_delete(
                     tld_ptr,
                     sbin_idx,
@@ -266,7 +266,7 @@ fn segments_page_find_and_allocate(
                     Ghost(list_idx),
                     Ghost(found_slice_count as int));
 
-                assert(tld_ptr.is_in(*local));
+//                assert(tld_ptr.is_in(*local));
 
                 if found_slice_count > slice_count {
                     /*proof {
@@ -292,7 +292,7 @@ fn segments_page_find_and_allocate(
                         Tracked(&mut *local));
                 }
 
-                assert(tld_ptr.is_in(*local));
+//                assert(tld_ptr.is_in(*local));
 
                 let suc = segment_span_allocate(
                     segment,
@@ -608,7 +608,7 @@ fn segment_slice_split(
         unused_page_get_mut!(last_slice, local, page => {
             //assert(0 <= (current_slice_count - target_slice_count) as u32 <= 512);
             //assert(SIZEOF_PAGE_HEADER == 32);
-            assert(SIZEOF_PAGE_HEADER as u32 == 80);
+//            assert(SIZEOF_PAGE_HEADER as u32 == 80);
             //assert((current_slice_count - target_slice_count) as u32 * (SIZEOF_PAGE_HEADER as u32)
             //    == (current_slice_count - target_slice_count) as u32 * 32);
             page.offset = (current_slice_count - target_slice_count - 1) as u32
@@ -1137,13 +1137,13 @@ fn segment_alloc(
             //assert(SIZEOF_PAGE_HEADER as int == vstd::layout::size_of::<Page>());
             segment_start_mult8(segment_id);
             //assert(cur_page_ptr.id() % vstd::layout::align_of::<Page>() as int == 0);
-            assert(
-                COMMIT_SIZE - (SIZEOF_SEGMENT_HEADER + SLICES_PER_SEGMENT * SIZEOF_PAGE_HEADER)
-                <= COMMIT_SIZE - (SIZEOF_SEGMENT_HEADER + i * SIZEOF_PAGE_HEADER))
-                by(nonlinear_arith) requires i <= SLICES_PER_SEGMENT;
+//            assert(
+//                COMMIT_SIZE - (SIZEOF_SEGMENT_HEADER + SLICES_PER_SEGMENT * SIZEOF_PAGE_HEADER)
+//                <= COMMIT_SIZE - (SIZEOF_SEGMENT_HEADER + i * SIZEOF_PAGE_HEADER))
+//                by(nonlinear_arith) requires i <= SLICES_PER_SEGMENT;
             //assert(SIZEOF_PAGE_HEADER as int <=
             //    COMMIT_SIZE - (SIZEOF_SEGMENT_HEADER + i * SIZEOF_PAGE_HEADER));
-            assert(i * SIZEOF_PAGE_HEADER + SIZEOF_PAGE_HEADER == (i + 1) * SIZEOF_PAGE_HEADER) by(nonlinear_arith);
+//            assert(i * SIZEOF_PAGE_HEADER + SIZEOF_PAGE_HEADER == (i + 1) * SIZEOF_PAGE_HEADER) by(nonlinear_arith);
             //assert(SIZEOF_SEGMENT_HEADER + i * SIZEOF_PAGE_HEADER < SEGMENT_SIZE);
             //assert(is_page_ptr(cur_page_ptr.id(), page_id));
         }
@@ -1490,7 +1490,7 @@ fn segment_os_alloc(
         by {
             reveal(CommitMask::bytes);
         }
-        assert(mem.os_rw_bytes().subset_of(mem.points_to.dom()));
+//        assert(mem.os_rw_bytes().subset_of(mem.points_to.dom()));
     }
 
     return (segment, psegment_slices, pre_size, pinfo_slices, is_zero, pcommit, mem_id, mem_large, is_pinned, align_offset, Tracked(mem));
@@ -1761,7 +1761,7 @@ fn segment_span_free(
         }
         */
 
-        assert(local.wf_main());
+//        assert(local.wf_main());
     }
 }
 
@@ -1853,9 +1853,9 @@ fn segment_page_clear(page: PagePtr, tld: TldPtr, Tracked(local): Tracked<&mut L
         assert forall |pid: PageId| page_id.range_from(0, n_slices as int).contains(pid)
             implies thread_state_tok.value().pages.dom().contains(pid)
         by {
-            assert(pid.segment_id == page_id.segment_id);
-            assert(page_id.idx <= pid.idx < page_id.idx + n_slices);
-            assert(local.page_organization.pages.dom().contains(pid));
+//            assert(pid.segment_id == page_id.segment_id);
+//            assert(page_id.idx <= pid.idx < page_id.idx + n_slices);
+//            assert(local.page_organization.pages.dom().contains(pid));
             assert(local.page_organization.pages[pid].is_used);
         }
         local.thread_token = thread_state_tok;
@@ -1984,7 +1984,7 @@ fn segment_page_clear(page: PagePtr, tld: TldPtr, Tracked(local): Tracked<&mut L
 
         assert(page_organization_pages_match(local.page_organization.pages, local.pages, local.psa));
         assert(local.page_organization_valid());*/
-        assert(local.wf_main());
+//        assert(local.wf_main());
     }
 
     segment_span_free_coalesce(page, tld, Tracked(&mut *local));
@@ -2134,7 +2134,7 @@ fn segment_span_free_coalesce(slice: PagePtr, tld: TldPtr, Tracked(local): Track
         }
     }
 
-    assert(local.wf_main());
+//    assert(local.wf_main());
 
     //// Merge with the 'before' page
     

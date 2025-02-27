@@ -752,7 +752,7 @@ fn heap_queue_first_update(heap: HeapPtr, pq: usize, Tracked(local): Tracked<&mu
             if prev != 0 {
                 size_of_bin_bounds_not_huge(prev as int);
                 assert(valid_bin_idx(prev as int));
-                assert(prev_block_size == size_of_bin(prev as int));
+//                assert(prev_block_size == size_of_bin(prev as int));
             }
         }
         let s = 1 + prev_block_size / 8;
@@ -764,16 +764,16 @@ fn heap_queue_first_update(heap: HeapPtr, pq: usize, Tracked(local): Tracked<&mu
     proof {
         if idx <= 1 {
             size_le_8_implies_idx_eq_1(pq as int);
-            assert(pq == 1);
-            assert(start == pfd_lower(pq as int));
+//            assert(pq == 1);
+//            assert(start == pfd_lower(pq as int));
         } else {
             size_gt_8_implies_idx_gt_1(pq as int);
-            assert(pq > 1);
-            assert(start == pfd_lower(pq as int));
+//            assert(pq > 1);
+//            assert(start == pfd_lower(pq as int));
         }
-        assert(idx == pfd_upper(pq as int));
+//        assert(idx == pfd_upper(pq as int));
         pfd_lower_le_upper(pq as int);
-        assert(start <= idx);
+//        assert(start <= idx);
     }
 
     let mut sz = start;

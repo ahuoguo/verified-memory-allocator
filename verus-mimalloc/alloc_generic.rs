@@ -198,9 +198,9 @@ fn page_free_list_extend(
     let ghost segment_id = page_id.segment_id;
     let tracked mut seg = local.segments.tracked_remove(segment_id);
     proof {
-        assert(extend * bsize >= 0) by(nonlinear_arith) requires extend >= 0, bsize >= 0;
+//        assert(extend * bsize >= 0) by(nonlinear_arith) requires extend >= 0, bsize >= 0;
         segment_mem_has_reserved_range(*old(local), page_id, capacity + extend);
-        assert(seg.mem.pointsto_has_range(rng_start, rng_size));
+//        assert(seg.mem.pointsto_has_range(rng_start, rng_size));
     }
     let tracked mut pt = seg.mem.take_points_to_range(rng_start, rng_size);
     proof { local.segments.tracked_insert(segment_id, seg); }
@@ -224,10 +224,10 @@ fn page_free_list_extend(
         // PAPER CUT: this kind of assert is flaky
         sub_distribute(reserved as int - capacity as int, extend as int, bsize as int);
 
-        assert((reserved as int - capacity as int) * bsize as int
-            >= extend as int * bsize as int) by(nonlinear_arith)
-          requires (reserved as int - capacity as int) >= extend
-          { }
+//        assert((reserved as int - capacity as int) * bsize as int
+//            >= extend as int * bsize as int) by(nonlinear_arith)
+//          requires (reserved as int - capacity as int) >= extend
+//          { }
 
         assert((capacity as int) * (bsize as int) + (extend as int - 1) * (bsize as int)
             == (capacity as int + extend as int - 1) * (bsize as int)) by (nonlinear_arith);
@@ -263,8 +263,8 @@ fn page_free_list_extend(
                 idx: BlockId::get_slice_idx(page_id, i, block_size),
             };
             start_offset_le_slice_size(bsize as int);
-            assert(i * block_size >= 0) by(nonlinear_arith)
-                requires i >= 0, block_size >= 0;
+//            assert(i * block_size >= 0) by(nonlinear_arith)
+//                requires i >= 0, block_size >= 0;
             let reserved = local.page_reserved(page_id);
             let capacity = local.page_capacity(page_id);
             assert(i * block_size < reserved * block_size) by(nonlinear_arith)
@@ -319,9 +319,9 @@ fn page_free_list_extend(
             segment_start_mult8(page_id.segment_id);
             start_offset_le_slice_size(bsize as int);
             //assert(segment_start(page_id.segment_id) % 8 == 0);
-            assert(page_start(page_id) % 8 == 0);
-            assert(start_offset(bsize as int) % 8 == 0);
-            assert(pag_start % 8 == 0);
+//            assert(page_start(page_id) % 8 == 0);
+//            assert(start_offset(bsize as int) % 8 == 0);
+//            assert(pag_start % 8 == 0);
             mod_mul(capacity as int, bsize as int, 8);
             //assert((capacity * bsize) % 8 == 0) by(nonlinear_arith)
             //    requires bsize % 8 == 0;
@@ -413,10 +413,10 @@ fn page_free_list_extend(
         block_start_at_diff(page_id, bsize as nat, capacity as nat, (capacity + extend) as nat);
 
         preserves_mem_chunk_good_on_transfer_to_capacity(*old(local), *local, page_id);
-        assert(local.mem_chunk_good(segment_id));
+//        assert(local.mem_chunk_good(segment_id));
         preserves_mem_chunk_good_except(*old(local), *local, segment_id);
 
-        assert(local.wf_main());
+//        assert(local.wf_main());
     }
 }
 

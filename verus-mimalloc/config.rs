@@ -107,11 +107,11 @@ pub proof fn const_facts()
         vstd::layout::align_of::<Heap>() == 8,
         vstd::layout::align_of::<Tld>() == 8,
 {
-    assert(SLICE_SIZE == 65536) by (compute);
+//    assert(SLICE_SIZE == 65536) by (compute);
     assert(SEGMENT_SIZE == 33554432) by (compute);
     assert(SMALL_PAGE_SIZE == 65536) by (compute);
     assert(MEDIUM_PAGE_SIZE == 524288) by (compute);
-    assert(COMMIT_MASK_FIELD_COUNT == 8) by (compute);
+//    assert(COMMIT_MASK_FIELD_COUNT == 8) by (compute);
 }
 
 use crate::types::todo;

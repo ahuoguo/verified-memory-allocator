@@ -130,17 +130,17 @@ pub proof fn block_ptr_aligned_to_word()
         reveal(is_block_ptr1);
         crate::linked_list::size_of_node();
         let page_id = block_id.page_id;
-        assert(segment_start(page_id.segment_id) % 8 == 0);
-        assert(SLICE_SIZE % 8 == 0);
-        assert(page_start(page_id) % 8 == 0);
+//        assert(segment_start(page_id.segment_id) % 8 == 0);
+//        assert(SLICE_SIZE % 8 == 0);
+//        assert(page_start(page_id) % 8 == 0);
         let block_size = block_id.block_size;
-        assert(start_offset(block_size as int) % 8 == 0);
-        assert(block_size % 8 == 0);
+//        assert(start_offset(block_size as int) % 8 == 0);
+//        assert(block_size % 8 == 0);
         let block_idx = block_id.idx as int;
         mod_mul(block_idx, block_size as int, 8);
-        assert((block_idx * block_size) % 8 == 0);
-        assert(block_start(block_id) % 8 == 0);
-        assert(p as int % 8 == 0);
+//        assert((block_idx * block_size) % 8 == 0);
+//        assert(block_start(block_id) % 8 == 0);
+//        assert(p as int % 8 == 0);
     }
 }
 
@@ -212,7 +212,7 @@ pub fn calculate_segment_ptr_from_block(ptr: *mut u8, Ghost(block_id): Ghost<Blo
     proof {
         reveal(is_block_ptr1);
         const_facts();
-        assert(block_p > 0);
+//        assert(block_p > 0);
 
         //bitmask_is_rounded_down((block_p - 1) as usize);
         //mod_removes_remainder(block_id.page_id.segment_id.id as int, SEGMENT_SIZE as int,
@@ -222,16 +222,16 @@ pub fn calculate_segment_ptr_from_block(ptr: *mut u8, Ghost(block_id): Ghost<Blo
         //assert(SEGMENT_SIZE >= 1);
 
         let id = block_id.page_id.segment_id.id as usize;
-        assert(id == block_id.page_id.segment_id.id);
-        assert(id < 0x7fffffffff);
+//        assert(id == block_id.page_id.segment_id.id);
+//        assert(id < 0x7fffffffff);
         assert(
             sub(block_p, 1) & (!0x1ffffffusize) == mul(id, 0x2000000)) by(bit_vector)
           requires 
             mul(id, 0x2000000) < block_p <= add(mul(id, 0x2000000), 0x2000000),
             id < 0x7fffffffffusize;
 
-        assert(mul(id, 0x2000000) == id * 0x2000000);
-        assert(add(mul(id, 0x2000000), 0x2000000) == id * 0x2000000 + 0x2000000);
+//        assert(mul(id, 0x2000000) == id * 0x2000000);
+//        assert(add(mul(id, 0x2000000), 0x2000000) == id * 0x2000000 + 0x2000000);
     }
 
     // Based on _mi_ptr_segment
@@ -278,7 +278,7 @@ pub fn calculate_slice_page_ptr_from_block(block_ptr: *mut u8, segment_ptr: *mut
     proof {
         reveal(is_block_ptr1);
         const_facts();
-        assert(b - s <= SEGMENT_SIZE);
+//        assert(b - s <= SEGMENT_SIZE);
     }
     let q = (b - s) / SLICE_SIZE as usize;
     proof {
@@ -358,8 +358,8 @@ pub fn calculate_page_block_at(
 {
     proof {
         const_facts();
-        assert(block_size * idx >= 0) by(nonlinear_arith)
-            requires block_size >= 0, idx >= 0;
+//        assert(block_size * idx >= 0) by(nonlinear_arith)
+//            requires block_size >= 0, idx >= 0;
         assert(block_size * idx == idx * block_size) by(nonlinear_arith);
     }
     let p = page_start + block_size * idx;
@@ -420,7 +420,7 @@ proof fn bitand_with_mask_gives_rounding(x: usize, y: usize)
 {
     if y == 1 {
         assert(x & !sub(1, 1) == x) by(bit_vector);
-        assert(x & !sub(y, 1) == (x / y) * y);
+//        assert(x & !sub(y, 1) == (x / y) * y);
     } else {
         assert((y >> 1) < y) by(bit_vector) requires y != 0usize;
         assert((y >> 1) != 0usize) by(bit_vector) requires y != 0usize, y != 1usize;
@@ -443,7 +443,7 @@ proof fn bitand_with_mask_gives_rounding(x: usize, y: usize)
             assert(y & sub(y, 1) == 0usize ==> y % 2usize == 0usize) by(bit_vector)
                 requires y != 0usize, y != 1usize;
         }
-        assert(x == 2 * x1 + b);
+//        assert(x == 2 * x1 + b);
         assert((2 * x1 + b) / (2 * y1) * (2 * y1)
           == 2 * (x1 / y1 * y1)) by
         {
@@ -452,13 +452,13 @@ proof fn bitand_with_mask_gives_rounding(x: usize, y: usize)
                 == 2 * (t * y1)) by(nonlinear_arith);
             two_mul_with_bit0(x1 as int, y1 as int);
             two_mul_with_bit1(x1 as int, y1 as int);
-            assert((2 * x1 + b) / (2 * y1) == x1 / y1); // by(nonlinear_arith)
+//            assert((2 * x1 + b) / (2 * y1) == x1 / y1); // by(nonlinear_arith)
                 //requires b == 0 || b == 1;
         }
-        assert(
-          x / y * y
-            == 2 * (((x >> 1) / (y >> 1)) * (y >> 1))
-        );
+//        assert(
+//          x / y * y
+//            == 2 * (((x >> 1) / (y >> 1)) * (y >> 1))
+//        );
         //assert(((x >> 1) / (y >> 1)) * (y >> 1) == ((x >> 1) & !sub(y >> 1, 1)));
         //assert(x & !sub(y, 1) == 2 * ((x >> 1) & !sub(y >> 1, 1)));
         //assert(x & !sub(y, 1) == (x / y) * y);
@@ -473,7 +473,7 @@ proof fn two_mul_with_bit0(x1: int, y1: int)
     assert(
         (2 * x1) / (2 * y1) == ((2 * x1) / 2) / y1) by(nonlinear_arith)
         requires y1 != 0;
-    assert((2 * x1) / 2 == x1);
+//    assert((2 * x1) / 2 == x1);
 }
 
 #[verifier::spinoff_prover]
@@ -484,7 +484,7 @@ proof fn two_mul_with_bit1(x1: int, y1: int)
     assert(
         (2 * x1 + 1) / (2 * y1) == ((2 * x1 + 1) / 2) / y1) by(nonlinear_arith)
         requires y1 != 0;
-    assert((2 * x1 + 1) / 2 == x1);
+//    assert((2 * x1 + 1) / 2 == x1);
 }
 
 
@@ -501,21 +501,21 @@ pub fn align_down(x: usize, y: usize) -> (res: usize)
     let mask = y - 1;
 
     proof {
-        assert(0 <= (x / y) * y <= x) by(nonlinear_arith)
-            requires y > 0, x >= 0;
+//        assert(0 <= (x / y) * y <= x) by(nonlinear_arith)
+//            requires y > 0, x >= 0;
 
         //assert((y & mask) == 0usize ==> (x & !mask) == sub(x, x % y)) by(bit_vector)
         //    requires mask == sub(y, 1), y >= 1usize;
         if y & mask == 0usize {
             bitand_with_mask_gives_rounding(x, y);
-            assert((x & !mask) == (x / y) * y);
-            assert((x & !mask) == (x as int / y as int) * y);
+//            assert((x & !mask) == (x / y) * y);
+//            assert((x & !mask) == (x as int / y as int) * y);
         }
 
-        assert((x as int / y as int) == (x / y) as int);
+//        assert((x as int / y as int) == (x / y) as int);
 
         assert(x / y * y + x % y == x) by(nonlinear_arith) requires y != 0;
-        assert(0 <= x % y < y);
+//        assert(0 <= x % y < y);
         let t = x / y;
         mul_mod_right(t as int, y as int);
         assert(y != 0 ==> (t * y) / y as int * y == t * y) by(nonlinear_arith);
@@ -543,11 +543,11 @@ pub fn align_up(x: usize, y: usize) -> (res: usize)
     proof {
         if y & mask == 0 {
             bitand_with_mask_gives_rounding((x + y - 1) as usize, y);
-            assert(((x + mask) as usize) & !mask == ((x + y - 1) / y as int) * y);
+//            assert(((x + mask) as usize) & !mask == ((x + y - 1) / y as int) * y);
         }
 
         let z = x + mask;
-        assert(z / y as int * y + z % y as int == z) by(nonlinear_arith) requires y != 0;
+//        assert(z / y as int * y + z % y as int == z) by(nonlinear_arith) requires y != 0;
 
         let t = (x + y - 1) / y as int;
         mul_mod_right(t, y as int);

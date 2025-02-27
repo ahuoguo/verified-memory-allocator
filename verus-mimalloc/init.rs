@@ -95,9 +95,9 @@ pub fn heap_init(Tracked(global): Tracked<Global>, // $line_count$Trusted$
 
     proof {
         const_facts();
-        assert(SIZEOF_HEAP == vstd::layout::size_of::<Heap>());
-        assert(SIZEOF_TLD == vstd::layout::size_of::<Tld>());
-        assert(addr as int % vstd::layout::align_of::<Heap>() as int == 0);
+//        assert(SIZEOF_HEAP == vstd::layout::size_of::<Heap>());
+//        assert(SIZEOF_TLD == vstd::layout::size_of::<Tld>());
+//        assert(addr as int % vstd::layout::align_of::<Heap>() as int == 0);
         assert((addr as usize + SIZEOF_HEAP) as int % vstd::layout::align_of::<Tld>() as int == 0);
     }
     vstd::layout::layout_for_type_is_valid::<Heap>(); // $line_count$Proof$
@@ -195,8 +195,8 @@ pub fn heap_init(Tracked(global): Tracked<Global>, // $line_count$Trusted$
     });
 
     let tracked heap_shared_access = HeapSharedAccess { points_to: points_to_heap };
-    assert(global.instance.id() == right.instance_id());
-    assert(right.element() == thread_id);
+//    assert(global.instance.id() == right.instance_id());
+//    assert(right.element() == thread_id);
 
     let tracked (Tracked(thread_token), Tracked(checked_token)) = global.instance.create_thread_mk_tokens(
             thread_id, 
@@ -256,14 +256,14 @@ pub fn heap_init(Tracked(global): Tracked<Global>, // $line_count$Trusted$
             //assert(smallest_bin_fitting_size(wsize * INTPTR_SIZE) < pages.len());
         }
 
-        assert(pages_free_direct_is_correct(
-            local.heap.pages_free_direct@.value.unwrap()@,
-            local.heap.pages@.value.unwrap()@,
-            emp));
-        assert(local.heap.wf_basic(local.heap_id, local.thread_token.value().heap, local.tld_id, local.instance.id()));
-        assert(local.heap.wf(local.heap_id, local.thread_token.value().heap, local.tld_id, local.instance.id(), local.page_empty_global@.s.points_to.ptr()));
-        assert(local.wf_main());
-        assert(local.wf());
+//        assert(pages_free_direct_is_correct(
+//            local.heap.pages_free_direct@.value.unwrap()@,
+//            local.heap.pages@.value.unwrap()@,
+//            emp));
+//        assert(local.heap.wf_basic(local.heap_id, local.thread_token.value().heap, local.tld_id, local.instance.id()));
+//        assert(local.heap.wf(local.heap_id, local.thread_token.value().heap, local.tld_id, local.instance.id(), local.page_empty_global@.s.points_to.ptr()));
+//        assert(local.wf_main());
+//        assert(local.wf());
     }
 
     (heap, Tracked(Some(local)))
@@ -467,8 +467,8 @@ fn pages_tmp() -> (pages: [PageQueue; 75])
                 else if p <= 70 { assert(p == 70); assert(size_of_bin(70) == 3145728) by(compute_only); assert(pages[p].block_size == size_of_bin(p)); }
                 else if p <= 71 { assert(p == 71); assert(size_of_bin(71) == 3670016) by(compute_only); assert(pages[p].block_size == size_of_bin(p)); }
                 else if p <= 72 { assert(p == 72); assert(size_of_bin(72) == 4194304) by(compute_only); assert(pages[p].block_size == size_of_bin(p)); }
-                else { assert(p == 73); assert(size_of_bin(73) == 8 * (524288 + 1)) by(compute_only); assert(pages[p].block_size == size_of_bin(p)); }
-                assert(pages[p].block_size == size_of_bin(p));
+//////                else { assert(p == 73); assert(size_of_bin(73) == 8 * (524288 + 1)) by(compute_only); assert(pages[p].block_size == size_of_bin(p)); }
+//                assert(pages[p].block_size == size_of_bin(p));
             }
         }
     }
@@ -719,16 +719,16 @@ fn init_empty_page_ptr() -> (e: EmptyPageStuff)
 
     proof { const_facts(); }
 
-    assert(set_int_range(pt as int, pt as int + 4096) <= mc.range_os_rw());
-    assert(set_int_range(pt as int, pt as int + 4096) <= mc.range_points_to());
-    assert(mc.pointsto_has_range(pt as int, 4096));
-    assert(mc.pointsto_has_range(pt as int, SIZEOF_PAGE_HEADER as int));
+//    assert(set_int_range(pt as int, pt as int + 4096) <= mc.range_os_rw());
+//    assert(set_int_range(pt as int, pt as int + 4096) <= mc.range_points_to());
+//    assert(mc.pointsto_has_range(pt as int, 4096));
+//    assert(mc.pointsto_has_range(pt as int, SIZEOF_PAGE_HEADER as int));
     let tracked points_to_raw = mc.take_points_to_range(pt as int, SIZEOF_PAGE_HEADER as int);
     proof {
-        assert(SIZEOF_PAGE_HEADER == vstd::layout::size_of::<Page>());
+//        assert(SIZEOF_PAGE_HEADER == vstd::layout::size_of::<Page>());
         mod_trans(pt as int, 4096,
             vstd::layout::align_of::<Page>() as int);
-        assert(pt as int % vstd::layout::align_of::<Page>() as int == 0);
+//        assert(pt as int % vstd::layout::align_of::<Page>() as int == 0);
     }
     vstd::layout::layout_for_type_is_valid::<Page>(); // $line_count$Proof$
     let tracked mut points_to = points_to_raw.into_typed::<Page>(pt as usize);

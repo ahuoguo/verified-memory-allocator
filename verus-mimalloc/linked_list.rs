@@ -214,19 +214,19 @@ impl LL {
 
             let ghost len = self.data@.len;
 
-            assert forall |i: nat| self.perms@.dom().contains(i) implies 0 <= i < self.data@.len
-            by {
-                if i + 1 < len { 
-                    assert(old(self).perms@.dom().contains(i));
-                }
-            }
+//            assert forall |i: nat| self.perms@.dom().contains(i) implies 0 <= i < self.data@.len
+//            by {
+//                if i + 1 < len { 
+////                    assert(old(self).perms@.dom().contains(i));
+//                }
+//            }
 
             assert forall |i: nat| #[trigger] self.valid_node(i, self.next_ptr(i))
             by {
                 assert(old(self).valid_node(i, old(self).next_ptr(i)));
                 if i > 0 {
                     let j = (i - 1) as nat;
-                    assert(old(self).valid_node(j, old(self).next_ptr(j)));
+//                    assert(old(self).valid_node(j, old(self).next_ptr(j)));
                 }
                 /*if i < len {
                     if i != 0 {
@@ -303,19 +303,19 @@ impl LL {
 
         let ghost len = self.data@.len;
 
-        assert forall |i: nat| self.perms@.dom().contains(i) implies 0 <= i < self.data@.len
-        by {
-            if i + 1 < len { 
-                assert(old(self).perms@.dom().contains(i));
-            }
-        }
+//        assert forall |i: nat| self.perms@.dom().contains(i) implies 0 <= i < self.data@.len
+//        by {
+//            if i + 1 < len { 
+////                assert(old(self).perms@.dom().contains(i));
+//            }
+//        }
 
         assert forall |i: nat| #[trigger] self.valid_node(i, self.next_ptr(i))
         by {
             assert(old(self).valid_node(i, old(self).next_ptr(i)));
             if i > 0 {
                 let j = (i - 1) as nat;
-                assert(old(self).valid_node(j, old(self).next_ptr(j)));
+//                assert(old(self).valid_node(j, old(self).next_ptr(j)));
             }
             /*if i < len {
                 if i != 0 {
@@ -341,10 +341,10 @@ impl LL {
                 let n = (self.len() - 1) as nat;
                 assert(self.valid_node(n, self.next_ptr(n)));
                 self.perms.borrow().tracked_borrow(n).0.is_nonnull();
-                assert(false);
+//                assert(false);
             }
         } else {
-            assert(self.len() != 0);
+//            assert(self.len() != 0);
         }
     }
 
@@ -415,13 +415,13 @@ impl LL {
                 assert(old(self).valid_node(i, old(self).next_ptr(i)));
                 if i > 0 {
                     let j = (i - 1) as nat;
-                    assert(old(self).valid_node(j, old(self).next_ptr(j)));
+//                    assert(old(self).valid_node(j, old(self).next_ptr(j)));
                 }
             }
             let j = self.data@.len;
-            assert(old(self).valid_node(j, old(self).next_ptr(j)));
-            assert(old(self).valid_node((j-1) as nat, old(self).next_ptr((j-1) as nat)));
-            assert((forall |i: nat| self.perms@.dom().contains(i) ==> 0 <= i < self.data@.len));
+//            assert(old(self).valid_node(j, old(self).next_ptr(j)));
+//            assert(old(self).valid_node((j-1) as nat, old(self).next_ptr((j-1) as nat)));
+//            assert((forall |i: nat| self.perms@.dom().contains(i) ==> 0 <= i < self.data@.len));
             /*if j > 0 {
                 //assert(old(self).perms@.dom().contains(j - 1));
                 //assert(self.perms@.dom().contains(j - 1));
@@ -430,10 +430,10 @@ impl LL {
             } else {
                 assert(self.first.id() == self.next_ptr(self.data@.len));
             }*/
-            assert(self.wf());
+//            assert(self.wf());
         }
 
-        assert(block.key().block_size >= size_of::<Node>());
+//        assert(block.key().block_size >= size_of::<Node>());
 
         return (ptru, Tracked(points_to_raw), Tracked(block))
     }
@@ -655,14 +655,14 @@ impl LL {
                 let k = (i - old_self.data@.len) as nat;
                 let k1 = (k - 1) as nat;
                 assert(old_other.valid_node(k, old_other.next_ptr(k)));
-                assert(old_other.valid_node(k1, old_other.next_ptr(k1)));
+//                assert(old_other.valid_node(k1, old_other.next_ptr(k1)));
 
                 if i < old_self.data@.len {
-                    assert(self.valid_node(i, self.next_ptr(i)));
+//                    assert(self.valid_node(i, self.next_ptr(i)));
                 } else if i < self.data@.len {
-                    assert(self.valid_node(i, self.next_ptr(i)));
+//                    assert(self.valid_node(i, self.next_ptr(i)));
                 } else {
-                    assert(self.valid_node(i, self.next_ptr(i)));
+//                    assert(self.valid_node(i, self.next_ptr(i)));
                 }
             }
         }
@@ -802,7 +802,7 @@ impl LL {
                 }})
         {
             proof {
-                assert(i < extend);
+//                assert(i < extend);
                 assert((i + 1) * bsize == i * bsize + bsize) by(nonlinear_arith);
                 assert((extend - i) * bsize == (extend - (i + 1)) * bsize + bsize)
                     by(nonlinear_arith);
@@ -810,8 +810,8 @@ impl LL {
                     by(nonlinear_arith) requires bsize >= 0, extend - i >= 1;
                 assert(i * bsize + bsize <= extend * bsize)
                     by(nonlinear_arith) requires bsize >= 0, extend - i >= 1;
-                assert(block + bsize <= start as int + extend * bsize);
-                assert(size_of::<Node>() == 8);
+//                assert(block + bsize <= start as int + extend * bsize);
+//                assert(size_of::<Node>() == 8);
             }
 
             let next: *mut Node = start.with_addr(block + bsize) as *mut Node;
@@ -876,18 +876,18 @@ impl LL {
             }
         }
 
-        assert((i + 1) * bsize == i * bsize + bsize) by(nonlinear_arith);
-        assert((extend - i) * bsize == (extend - (i + 1)) * bsize + bsize) by(nonlinear_arith);
+//        assert((i + 1) * bsize == i * bsize + bsize) by(nonlinear_arith);
+//        assert((extend - i) * bsize == (extend - (i + 1)) * bsize + bsize) by(nonlinear_arith);
         assert(bsize <= (extend - i) * bsize)
             by(nonlinear_arith) requires bsize >= 0, extend - i >= 1;
         assert(i * bsize + bsize <= extend * bsize)
             by(nonlinear_arith) requires bsize >= 0, extend - i >= 1;
-        assert(block + bsize <= start as int + extend * bsize);
+//        assert(block + bsize <= start as int + extend * bsize);
         assert(i == extend - 1) by {
             if i < extend - 1 {
                 assert(i * bsize < (extend as int - 1) * bsize)
                   by(nonlinear_arith) requires bsize > 0, i < extend as int - 1;
-                assert(false);
+//                assert(false);
             }
         }
 
@@ -920,16 +920,16 @@ impl LL {
                 let (perm, padding, block_token, exposed) = self.perms@.index(j);
                 if j < old_len {
                     assert(old(self).valid_node(j, old(self).next_ptr(j)));
-                    assert(!new_map.dom().contains(j));
-                    assert(self.perms@.index(j) == old(self).perms@.index(j));
+//                    assert(!new_map.dom().contains(j));
+//                    assert(self.perms@.index(j) == old(self).perms@.index(j));
 
                     if j > 0 {
                         assert(old(self).valid_node((j-1) as nat, old(self).next_ptr((j-1) as nat)));
-                        assert(self.perms@.index((j-1) as nat) == old(self).perms@.index((j-1) as nat));
-                        assert(self.perms@.index((j - 1) as nat)
-                            == old(self).perms@.index((j - 1) as nat));
+//                        assert(self.perms@.index((j-1) as nat) == old(self).perms@.index((j-1) as nat));
+//                        assert(self.perms@.index((j - 1) as nat)
+//                            == old(self).perms@.index((j - 1) as nat));
                     }
-                    assert(old(self).next_ptr(j) == self.next_ptr(j));
+//                    assert(old(self).next_ptr(j) == self.next_ptr(j));
 
                     /*if self.fixed_page() {
                         assert(old(self).fixed_page());
@@ -944,12 +944,12 @@ impl LL {
                         assert(block_token.key().page_id == self.data@.page_id);
                     }*/
 
-                    assert(self.valid_node(j, self.next_ptr(j)));
+//                    assert(self.valid_node(j, self.next_ptr(j)));
                 } else if j < self.data@.len {
                     let (perm, padding, block_token, exposed) = self.perms@.index(j);
                     let next_ptr = self.next_ptr(j);
 
-                    assert(block_token.key().block_size == bsize);
+//                    assert(block_token.key().block_size == bsize);
                     assert(is_block_ptr(perm.ptr() as *mut u8, block_token.key())) by {
                         let block_id = block_token.key();
                         crate::layout::get_block_start_defn(block_id);
@@ -973,20 +973,20 @@ impl LL {
                     if j == old_len {
                         if j > 0 {
                             assert(old(self).valid_node((j-1) as nat, old(self).next_ptr((j-1) as nat)));
-                            assert(self.perms@.index((j-1) as nat) == old(self).perms@.index((j-1) as nat));
-                            assert(self.perms@.index((j - 1) as nat)
-                                == old(self).perms@.index((j - 1) as nat));
+//                            assert(self.perms@.index((j-1) as nat) == old(self).perms@.index((j-1) as nat));
+//                            assert(self.perms@.index((j - 1) as nat)
+//                                == old(self).perms@.index((j - 1) as nat));
                         }
-                        assert(perm.value().ptr.addr() == next_ptr.addr());
+//                        assert(perm.value().ptr.addr() == next_ptr.addr());
                     } else {
-                        assert(perm.value().ptr.addr() == next_ptr.addr());
+//                        assert(perm.value().ptr.addr() == next_ptr.addr());
                     }
 
                     //assert(padding@.size + size_of::<Node>() == block_token.key().block_size);
-                    assert(self.valid_node(j, self.next_ptr(j)));
+//                    assert(self.valid_node(j, self.next_ptr(j)));
                 }
             }
-            assert(self.wf());
+//            assert(self.wf());
         }
     }
 
@@ -1035,7 +1035,7 @@ impl LL {
             by {
                 if 0 <= i < len {
                     assert(old(self).valid_node(i, old(self).next_ptr(i)));
-                    assert(m.dom().contains(i));
+//                    assert(m.dom().contains(i));
                 }
                 /*if m.dom().contains(i) {
                     assert(0 <= i < len);
@@ -1092,13 +1092,13 @@ impl LL {
     {
         if len == 0 {
             let tracked m = Map::tracked_empty();
-            assert(m.dom() =~= Set::empty());
-            assert(m.len() == 0);
+//            assert(m.dom() =~= Set::empty());
+//            assert(m.len() == 0);
             m
         } else {
             let i = (len - 1) as nat;
             let tracked mut m = m;
-            assert(m.dom().contains(i));
+//            assert(m.dom().contains(i));
             let tracked (mut perm, padding, block_token, exposed) = m.tracked_remove(i);
             let tracked mut m2 = Self::convene_pt_map(m, i, instance, page_id, block_size);
             crate::layout::get_block_start_from_is_block_ptr(perm.ptr() as *mut u8, block_token.key());
@@ -1107,10 +1107,10 @@ impl LL {
             let tracked ptraw = permraw.join(padding);
             let mj = m2;
             m2.tracked_insert(i, (ptraw, block_token));
-            assert(mj.dom().contains(i) == false);
-            assert(m2.dom() =~= mj.dom().insert(i));
-            assert(m2.dom().len() == mj.dom().len() + 1);
-            assert(m2.len() == len);
+//            assert(mj.dom().contains(i) == false);
+//            assert(m2.dom() =~= mj.dom().insert(i));
+//            assert(m2.dom().len() == mj.dom().len() + 1);
+//            assert(m2.len() == len);
             m2
         }
     }
@@ -1154,11 +1154,11 @@ impl LL {
         if exists |p| llgstr.map.dom().contains(p) && !(0 <= idxmap[p] < n_blocks) {
             let p = choose |p| llgstr.map.dom().contains(p) && !(0 <= idxmap[p] < n_blocks);
             let tracked LLGhostStateToReconvene { map: mut map, .. } = llgstr;
-            assert(map.dom().contains(p));
+//            assert(map.dom().contains(p));
             let tracked (_, block_p) = map.tracked_remove(p);
-            assert(block_p.instance_id() == inst.id());
+//            assert(block_p.instance_id() == inst.id());
             inst.block_in_range(ts.key(), block_p.key(), ts, &block_p);
-            assert(false);
+//            assert(false);
             proof_from_false()
         } else if exists |i| 0 <= i < n_blocks && !has_idx(llgstr.map, i) {
             let i = choose |i| 0 <= i < n_blocks && !has_idx(llgstr.map, i);
@@ -1167,7 +1167,7 @@ impl LL {
             let tracked (_, block_p) = map.tracked_remove(p);
             let tracked (_, block_q) = map.tracked_remove(q);
             inst.block_tokens_distinct(block_p.key(), block_q.key(), block_p, block_q);
-            assert(false);
+//            assert(false);
             proof_from_false()
         } else {
             let tracked LLGhostStateToReconvene { map, .. } = llgstr;
@@ -1202,7 +1202,7 @@ impl LL {
         assert(map1.dom() =~= set_nat_range(0, 
             llgstr1.map.len() + llgstr2.map.len()));
         lemma_nat_range(0, llgstr1.map.len() + llgstr2.map.len());
-        assert(map1.len() == llgstr1.map.len() + llgstr2.map.len());
+//        assert(map1.len() == llgstr1.map.len() + llgstr2.map.len());
         let tracked llgstr = LLGhostStateToReconvene {
             map: map1,
             block_size: llgstr1.block_size,
@@ -1215,8 +1215,8 @@ impl LL {
         let block_size = llgstr.block_size;
         let page_id = llgstr.page_id;
         let instance = llgstr.instance;
-        assert forall |i: nat| (#[trigger] map.dom().contains(i) <==> 0 <= i < len)
-        by { }
+//        assert forall |i: nat| (#[trigger] map.dom().contains(i) <==> 0 <= i < len)
+//        by { }
 
         assert forall |i: nat|
             #[trigger] map.dom().contains(i) implies ({
@@ -1233,11 +1233,11 @@ impl LL {
         by {
             let (padding, block_token) = map[i];
             if i < llgstr1.map.len() {
-                assert(block_token.key().block_size - size_of::<Node>() >= 0);
+//                assert(block_token.key().block_size - size_of::<Node>() >= 0);
             } else {
                 let t = (i - llgstr1.map.len()) as nat;
                 assert(llgstr2.map.dom().contains(t));
-                assert(block_token.key().block_size - size_of::<Node>() >= 0);
+//                assert(block_token.key().block_size - size_of::<Node>() >= 0);
             }
         }
 
@@ -1300,10 +1300,10 @@ impl LL {
             let old_blocks = blocks;
             blocks.tracked_insert(block.key(), block);
 
-            assert(block.key().idx == len - 1);
-            assert(old_blocks.dom().contains(block.key()) == false);
-            assert(blocks.dom() =~= old_blocks.dom().insert(block.key()));
-            assert(blocks.dom().len() == len);
+//            assert(block.key().idx == len - 1);
+//            assert(old_blocks.dom().contains(block.key()) == false);
+//            assert(blocks.dom() =~= old_blocks.dom().insert(block.key()));
+//            assert(blocks.dom().len() == len);
 
             assert((len - 1) * block_size + block_size == len * block_size) by(nonlinear_arith);
             crate::layout::get_block_start_defn(block.key());
@@ -1396,7 +1396,7 @@ pub fn bound_on_2_lists(
             by {
                 if 0 <= i < len {
                     assert(old(ll1).valid_node(i, old(ll1).next_ptr(i)));
-                    assert(m.dom().contains(i));
+//                    assert(m.dom().contains(i));
                 }
             }
             let tracked mut map = LL::convene_pt_map(m, len, instance, page_id, block_size);
@@ -1409,7 +1409,7 @@ pub fn bound_on_2_lists(
             by {
                 if 0 <= i < len {
                     assert(old(ll2).valid_node(i, old(ll2).next_ptr(i)));
-                    assert(m.dom().contains(i));
+//                    assert(m.dom().contains(i));
                 }
             }
             let tracked mut map = LL::convene_pt_map(m, len, instance, page_id, block_size);
@@ -1423,17 +1423,17 @@ pub fn bound_on_2_lists(
                 |p| map[p].1.key().idx);
             if exists |p| map.dom().contains(p) && !(0 <= idxmap[p] < n_blocks) {
                 let p = choose |p| map.dom().contains(p) && !(0 <= idxmap[p] < n_blocks);
-                assert(map.dom().contains(p));
+//                assert(map.dom().contains(p));
                 let tracked (_, block_p) = map.tracked_remove(p);
-                assert(block_p.instance_id() == instance.id());
+//                assert(block_p.instance_id() == instance.id());
                 instance.block_in_range(thread_token.key(), block_p.key(), thread_token, &block_p);
-                assert(false);
+//                assert(false);
             } else {
                 let (p, q) = crate::pigeonhole::pigeonhole_too_many_elements_implies_double(idxmap, (map.len() - 1) as nat);
                 let tracked (_, block_p) = map.tracked_remove(p);
                 let tracked (_, block_q) = map.tracked_remove(q);
                 instance.block_tokens_distinct(block_p.key(), block_q.key(), block_p, block_q);
-                assert(false);
+//                assert(false);
             }
         }
     }
@@ -1469,7 +1469,7 @@ pub fn bound_on_1_lists(
             by {
                 if 0 <= i < len {
                     assert(old(ll1).valid_node(i, old(ll1).next_ptr(i)));
-                    assert(m.dom().contains(i));
+//                    assert(m.dom().contains(i));
                 }
             }
 
@@ -1480,17 +1480,17 @@ pub fn bound_on_1_lists(
                 |p| map[p].1.key().idx);
             if exists |p| map.dom().contains(p) && !(0 <= idxmap[p] < n_blocks) {
                 let p = choose |p| map.dom().contains(p) && !(0 <= idxmap[p] < n_blocks);
-                assert(map.dom().contains(p));
+//                assert(map.dom().contains(p));
                 let tracked (_, block_p) = map.tracked_remove(p);
-                assert(block_p.instance_id() == instance.id());
+//                assert(block_p.instance_id() == instance.id());
                 instance.block_in_range(thread_token.key(), block_p.key(), thread_token, &block_p);
-                assert(false);
+//                assert(false);
             } else {
                 let (p, q) = crate::pigeonhole::pigeonhole_too_many_elements_implies_double(idxmap, (map.len() - 1) as nat);
                 let tracked (_, block_p) = map.tracked_remove(p);
                 let tracked (_, block_q) = map.tracked_remove(q);
                 instance.block_tokens_distinct(block_p.key(), block_q.key(), block_p, block_q);
-                assert(false);
+//                assert(false);
             }
         }
     }
@@ -1652,8 +1652,8 @@ impl ThreadLLSimple {
             perms: Tracked(ll.perms.get()),
         };
 
-        assert(forall |i: nat| ll.valid_node(i, ll.next_ptr(i))
-            ==> new_ll.valid_node(i, new_ll.next_ptr(i)));
+//        assert(forall |i: nat| ll.valid_node(i, ll.next_ptr(i))
+//            ==> new_ll.valid_node(i, new_ll.next_ptr(i)));
 
         new_ll
     }

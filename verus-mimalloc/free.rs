@@ -155,7 +155,7 @@ pub fn free(ptr: *mut u8, Tracked(user_perm): Tracked<PointsToRaw>, Tracked(user
         page_ptr,
         page_id: Ghost(page_id),
     };
-    assert(page_ptr.addr() != 0) by { is_page_ptr_nonzero(page_ptr, page_id); }
+//    assert(page_ptr.addr() != 0) by { is_page_ptr_nonzero(page_ptr, page_id); }
 
     // Case based on whether this is thread local or not
 
@@ -569,7 +569,7 @@ pub fn free_delayed_block(ptr: *mut u8,
     );
     //assert(crate::layout::is_page_ptr(page_ptr, block_id.page_id));
     let ghost page_id = dealloc.block_id().page_id;
-    assert(page_ptr as int != 0) by { is_page_ptr_nonzero(page_ptr, page_id); }
+//    assert(page_ptr as int != 0) by { is_page_ptr_nonzero(page_ptr, page_id); }
 
     let page = PagePtr { page_ptr: page_ptr, page_id: Ghost(block_id.page_id) };
     proof {
