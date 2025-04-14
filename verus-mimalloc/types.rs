@@ -20,6 +20,10 @@ use crate::bin_sizes::{valid_bin_idx, size_of_bin, smallest_bin_fitting_size};
 use crate::arena::{ArenaId, MemId};
 
 verus!{
+    broadcast use vstd::seq_lib::group_seq_properties,
+    vstd::map_lib::group_map_properties,
+    vstd::set_lib::group_set_properties,
+    vstd::multiset::group_multiset_properties;
 
 //// Page header data
 

@@ -15,6 +15,10 @@ use crate::config::SLICE_SIZE;
 // above. Note that the implementation just uses pointers.
 
 verus!{
+    broadcast use vstd::seq_lib::group_seq_properties,
+    vstd::map_lib::group_map_properties,
+    vstd::set_lib::group_set_properties,
+    vstd::multiset::group_multiset_properties;
 
 pub ghost struct HeapId {
     pub id: nat,
