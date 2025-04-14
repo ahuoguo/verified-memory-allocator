@@ -223,7 +223,7 @@ proof fn segment_u_max_not_in(s: Set<SegmentId>)
 {
     vstd::set_lib::lemma_set_empty_equivalency_len(s);
     if s.len() == 0 {
-        assert(s === Set::empty());
+//        assert(s === Set::empty());
     } else {
         let x = s.choose();
         let t = s.remove(x);
@@ -260,7 +260,7 @@ proof fn heap_u_max_not_in(s: Set<HeapId>)
 {
     vstd::set_lib::lemma_set_empty_equivalency_len(s);
     if s.len() == 0 {
-        assert(s === Set::empty());
+//        assert(s === Set::empty());
     } else {
         let x = s.choose();
         let t = s.remove(x);
@@ -1474,7 +1474,7 @@ tokenized_state_machine!{ Mim {
                 assert(Self::okay_to_add_block(ts1, page_id, block_id.idx, block_size));
             }
             assert(post.segment_shared_access.dom().contains(block_id.page_id.segment_id));
-            assert(post.inv_block_id_valid_for_block(block_id));
+//            assert(post.inv_block_id_valid_for_block(block_id));
         }
     }
 
@@ -1497,10 +1497,10 @@ tokenized_state_machine!{ Mim {
             if (blocks.len() > len) {
                 vstd::set_lib::lemma_set_empty_equivalency_len(blocks.dom());
                 let t = choose |t: BlockId| blocks.dom().contains(t);
-                assert(blocks.dom().contains(t));
-                assert(false);
+//                assert(blocks.dom().contains(t));
+//                assert(false);
             }
-            assert(forall |i| 0 <= i < blocks.len() ==> Self::blocks_has(blocks, page_id, i));
+//            assert(forall |i| 0 <= i < blocks.len() ==> Self::blocks_has(blocks, page_id, i));
         } else {
             if Self::blocks_has(blocks, page_id, len - 1) {
                 let block_id = choose |block_id: BlockId| blocks.dom().contains(block_id)
@@ -1512,9 +1512,9 @@ tokenized_state_machine!{ Mim {
                 by {
                     if i < blocks.len() - 1 {
                         assert(Self::blocks_has(blocks0, page_id, i));
-                        assert(Self::blocks_has(blocks, page_id, i));
+//                        assert(Self::blocks_has(blocks, page_id, i));
                     } else {
-                        assert(Self::blocks_has(blocks, page_id, i));
+//                        assert(Self::blocks_has(blocks, page_id, i));
                     }
                 }
             } else {
@@ -1547,26 +1547,26 @@ tokenized_state_machine!{ Mim {
         by {
             if block_id.page_id == page_id {
                 assert(Self::blocks_has(blocks, page_id, block_id.idx as int));
-                assert(post.inv_block_id_valid_for_block(block_id));
+//                assert(post.inv_block_id_valid_for_block(block_id));
             } else {
-                assert(post.inv_block_id_valid_for_block(block_id));
+//                assert(post.inv_block_id_valid_for_block(block_id));
             }
         }
     }
    
     #[inductive(page_disable)]
     fn page_disable_inductive(pre: Self, post: Self, thread_id: ThreadId, page_id: PageId, n_slices: nat) {
-        assert forall |pid: PageId| #[trigger] post.delay_actor.dom().contains(pid)
-            implies post.inv_delay_actor_for_page(pid)
-        by {
-            if pid == page_id {
-                assert(post.inv_delay_actor_for_page(pid));
-            } else if page_id.range_from(0, n_slices as int).contains(pid) {
-                assert(post.inv_delay_actor_for_page(pid));
-            } else {
-                assert(post.inv_delay_actor_for_page(pid));
-            }
-        }
+//        assert forall |pid: PageId| #[trigger] post.delay_actor.dom().contains(pid)
+//            implies post.inv_delay_actor_for_page(pid)
+//        by {
+//            if pid == page_id {
+////                assert(post.inv_delay_actor_for_page(pid));
+//            } else if page_id.range_from(0, n_slices as int).contains(pid) {
+////                assert(post.inv_delay_actor_for_page(pid));
+//            } else {
+////                assert(post.inv_delay_actor_for_page(pid));
+//            }
+//        }
         /*assert forall |block_id: BlockId| #[trigger] post.block.dom().contains(block_id)
             implies post.inv_block_id_valid_for_block(block_id)
         by {
@@ -1597,22 +1597,22 @@ tokenized_state_machine!{ Mim {
    
     #[inductive(page_destroy_tokens)]
     fn page_destroy_tokens_inductive(pre: Self, post: Self, thread_id: ThreadId, page_id: PageId, n_slices: nat) {
-        assert(page_id.range_from(0, n_slices as int).contains(page_id));
-        assert forall |block_id: BlockId| #[trigger] post.block.dom().contains(block_id)
-            implies post.inv_block_id_valid_for_block(block_id)
-        by {
-            if block_id.page_id == page_id {
-                assert(post.inv_block_id_valid_for_block(block_id));
-            } else if page_id.range_from(0, n_slices as int).contains(block_id.page_id) {
-                assert(post.inv_block_id_valid_for_block(block_id));
-            } else {
-                assert(post.inv_block_id_valid_for_block(block_id));
-            }
-        }
+//        assert(page_id.range_from(0, n_slices as int).contains(page_id));
+//        assert forall |block_id: BlockId| #[trigger] post.block.dom().contains(block_id)
+//            implies post.inv_block_id_valid_for_block(block_id)
+//        by {
+//            if block_id.page_id == page_id {
+////                assert(post.inv_block_id_valid_for_block(block_id));
+//            } else if page_id.range_from(0, n_slices as int).contains(block_id.page_id) {
+////                assert(post.inv_block_id_valid_for_block(block_id));
+//            } else {
+////                assert(post.inv_block_id_valid_for_block(block_id));
+//            }
+//        }
         let ts = pre.thread_local_state[thread_id];
         assert(page_id.range_from(0, n_slices as int).contains(page_id));
-        assert(!ts.pages[page_id].is_enabled);
-        assert(!pre.delay_actor.dom().contains(page_id));
+//        assert(!ts.pages[page_id].is_enabled);
+//        assert(!pre.delay_actor.dom().contains(page_id));
     }
    
     #[inductive(block_tokens_distinct)]
@@ -1655,9 +1655,9 @@ tokenized_state_machine!{ Mim {
         by {
             if hid1.uniq == u {
                 assert((pre.heap_shared_access.dom() + pre.reserved_uniq).contains(hid2));
-                assert(hid1.uniq != hid2.uniq);
+//                assert(hid1.uniq != hid2.uniq);
             } else {
-                assert(hid1.uniq != hid2.uniq);
+//                assert(hid1.uniq != hid2.uniq);
             }
         }
     }

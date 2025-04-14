@@ -86,9 +86,9 @@ pub fn os_good_alloc_size(size: usize) -> (res: usize)
             const_facts();
             mod_trans(x as int, align_size as int, page_size());
             if size <= SEGMENT_SIZE {
-                assert((size + page_size() - 1) / page_size() <= 8192);
-                assert((size + page_size() - 1) / page_size() * page_size() <= SEGMENT_SIZE);
-                assert((SEGMENT_SIZE + 0x400000 - 1) / 0x400000 as int == 8) by(compute); // needed on x64-docker
+//                assert((size + page_size() - 1) / page_size() <= 8192);
+//                assert((size + page_size() - 1) / page_size() * page_size() <= SEGMENT_SIZE);
+//                assert((SEGMENT_SIZE + 0x400000 - 1) / 0x400000 as int == 8) by(compute); // needed on x64-docker
             }
         }
         return x;
@@ -125,8 +125,8 @@ pub fn os_alloc_aligned(
     let size1 = os_good_alloc_size(size);
     let alignment1 = align_up(alignment, get_page_size());
     proof {
-        assert(alignment1 == alignment);
-        assert(size1 >= size);
+//        assert(alignment1 == alignment);
+//        assert(size1 >= size);
         const_facts();
     }
     os_mem_alloc_aligned(size1, alignment1, request_commit, allow_large)
@@ -365,4 +365,3 @@ fn unix_mmapx(
 }
 
 }
-

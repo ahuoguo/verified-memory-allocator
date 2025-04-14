@@ -64,16 +64,16 @@ pub fn os_decommit(addr: *mut u8, size: usize, Tracked(mem): Tracked<&mut MemChu
     proof {
         mem.join(t);
 
-        assert(t.os_rw_bytes().subset_of(t1.os_rw_bytes()));
+//        assert(t.os_rw_bytes().subset_of(t1.os_rw_bytes()));
         assert forall |p| mem.os_rw_bytes().contains(p)
             implies old(mem).os_rw_bytes().contains(p)
         by {
             if addr as int <= p < addr as int + size {
-                assert(t1.os_rw_bytes().contains(p));
+//                assert(t1.os_rw_bytes().contains(p));
                 assert(t.os_rw_bytes().contains(p));
-                assert(old(mem).os_rw_bytes().contains(p));
+//                assert(old(mem).os_rw_bytes().contains(p));
             } else {
-                assert(old(mem).os_rw_bytes().contains(p));
+//                assert(old(mem).os_rw_bytes().contains(p));
             }
         }
         assert_sets_equal!(old(mem).points_to.dom() - mem.points_to.dom(),
@@ -99,7 +99,7 @@ pub fn os_decommit(addr: *mut u8, size: usize, Tracked(mem): Tracked<&mut MemChu
                 }
             }
         });
-        assert(mem.os_rw_bytes().subset_of(old(mem).os_rw_bytes()));
+//        assert(mem.os_rw_bytes().subset_of(old(mem).os_rw_bytes()));
     }
     success
 }
@@ -210,7 +210,7 @@ fn os_commitx(
                 =~= set_int_range(addr as int, addr + size as int));
             */
         }
-        assert(mem.os.dom() =~= old(mem).os.dom());
+//        assert(mem.os.dom() =~= old(mem).os.dom());
     }
 
     // TODO bubble up error instead of panicking
@@ -218,4 +218,3 @@ fn os_commitx(
 }
 
 }
-

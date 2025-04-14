@@ -81,7 +81,7 @@ impl PageInner {
     {
         let x = self.flags2 >> 1u8;
         proof {
-            assert(x == (self.flags2 >> 1u8));
+//            assert(x == (self.flags2 >> 1u8));
             let y = self.flags2;
             assert((y >> 1u8) <= 127) by(bit_vector);
         }

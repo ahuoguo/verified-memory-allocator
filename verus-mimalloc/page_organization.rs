@@ -557,9 +557,9 @@ state_machine!{ PageOrg {
 
     {
         assert(is_in_lls(page_id, self.used_lists) || is_in_lls(page_id, self.unused_lists)) by { reveal(State::ll_inv_exists_in_some_list); };
-        assert(is_in_lls(page_id, self.used_lists));
+//        assert(is_in_lls(page_id, self.used_lists));
         let list_idx = choose |list_idx: int| 0 <= list_idx < self.used_lists[BIN_FULL as int].len() && self.used_lists[BIN_FULL as int][list_idx] == page_id;
-        assert(self.used_lists[BIN_FULL as int][list_idx] == page_id);
+//        assert(self.used_lists[BIN_FULL as int][list_idx] == page_id);
 
         let bin_idx = BIN_FULL as int;
         assert(valid_ll_i(self.pages, self.used_lists[bin_idx], list_idx));
@@ -594,18 +594,18 @@ state_machine!{ PageOrg {
         assert(is_in_lls(page_id, self.used_lists) || is_in_lls(page_id, self.unused_lists)) by { reveal(State::ll_inv_exists_in_some_list); };
         match self.pages[page_id].page_header_kind {
             Some(PageHeaderKind::Normal(_, size)) => {
-                assert(is_in_lls(page_id, self.used_lists));
+//                assert(is_in_lls(page_id, self.used_lists));
                 //let bin_idx = smallest_bin_fitting_size(size);
                 //crate::bin_sizes::bounds_for_smallest_bin_fitting_size(size);
                 let (bin_idx, list_idx) = choose |bin_idx: int, list_idx: int| 0 <= bin_idx < self.used_lists.len() && 0 <= list_idx < self.used_lists[bin_idx].len() && self.used_lists[bin_idx][list_idx] == page_id;
-                assert(self.used_lists[bin_idx][list_idx] == page_id);
+//                assert(self.used_lists[bin_idx][list_idx] == page_id);
                 assert(valid_ll_i(self.pages, self.used_lists[bin_idx], list_idx));
-                assert(bin_idx != BIN_FULL);
+//                assert(bin_idx != BIN_FULL);
                 crate::bin_sizes::smallest_bin_fitting_size_size_of_bin(bin_idx);
                 return list_idx;
             }
             None => {
-                assert(false);
+//                assert(false);
                 return 0;
             }
         }
@@ -644,10 +644,10 @@ state_machine!{ PageOrg {
             reveal(State::get_list_idx);
         }
 
-        assert(i == sbin_idx);
+//        assert(i == sbin_idx);
 
-        assert(valid_ll(self.pages, self.unused_dlist_headers[sbin_idx], self.unused_lists[sbin_idx]));
-        assert(valid_ll_i(self.pages, self.unused_lists[sbin_idx], list_idx));
+//        assert(valid_ll(self.pages, self.unused_dlist_headers[sbin_idx], self.unused_lists[sbin_idx]));
+//        assert(valid_ll_i(self.pages, self.unused_lists[sbin_idx], list_idx));
         self.lemma_range_not_used(page_id);
     }
 
@@ -753,11 +753,11 @@ state_machine!{ PageOrg {
             None => { }
             Some(count) => {
                 if page_id.idx == 0 {
-                    assert(page_id.idx + count <= SLICES_PER_SEGMENT);
+//                    assert(page_id.idx + count <= SLICES_PER_SEGMENT);
                 } else if is_unused_header(self.pages[page_id]) {
                     self.lemma_range_not_used(page_id);
                 } else {
-                    assert(is_used_header(self.pages[page_id]));
+//                    assert(is_used_header(self.pages[page_id]));
                     match self.popped {
                         Popped::Used(pid, _) if pid == page_id => {
                         }
@@ -804,7 +804,7 @@ state_machine!{ PageOrg {
             Some(page_id) => {
                 self.first_last_ll_stuff_used(bin_idx);
                 self.lemma_range_used(page_id);
-                assert(self.pages[page_id].dlist_entry.is_some());
+//                assert(self.pages[page_id].dlist_entry.is_some());
             }
             None => { }
         }
@@ -857,9 +857,9 @@ state_machine!{ PageOrg {
         reveal(State::attached_rec);
         let segment_id = self.popped.get_VeryUnready_0();
         if idx == SLICES_PER_SEGMENT {
-            assert(!sp);
+//            assert(!sp);
         } else if idx > SLICES_PER_SEGMENT {
-            assert(false);
+//            assert(false);
         } else if Self::is_the_popped(segment_id, idx, self.popped) {
             assert(self.attached_rec(segment_id, idx + self.popped_len(), false));
         } else {
@@ -926,11 +926,11 @@ state_machine!{ PageOrg {
         reveal(State::attached_rec);
         let segment_id = self.popped.get_VeryUnready_0();
         if idx == SLICES_PER_SEGMENT {
-            assert(!sp);
+//            assert(!sp);
         } else if idx > SLICES_PER_SEGMENT {
-            assert(false);
+//            assert(false);
         } else if Self::is_the_popped(segment_id, idx, self.popped) {
-            assert(self.attached_rec(segment_id, idx + self.popped_len(), false));
+//            assert(self.attached_rec(segment_id, idx + self.popped_len(), false));
         } else {
             let page_id = PageId { segment_id, idx: idx as nat };
             self.rec_valid_page_before(idx + self.pages[page_id].count.unwrap(), sp);
@@ -1971,11 +1971,11 @@ state_machine!{ PageOrg {
         pre.unused_ll_stuff(sbin_idx, list_idx);
         pre.lemma_range_not_used(page_id);
 
-        assert(post.popped_basics());
+//        assert(post.popped_basics());
 
         //Self::ucount_preserve_except(pre, post, page_id.segment_id);
         Self::ucount_preserve_all(pre, post);
-        assert(post.count_is_right());
+//        assert(post.count_is_right());
         Self::unchanged_used_ll(pre, post);
 
         let dlist_entry = pre.pages[page_id].dlist_entry.unwrap();
@@ -1999,22 +1999,22 @@ state_machine!{ PageOrg {
         let dlist_entry = pre.pages[page_id].dlist_entry.unwrap();
         assert forall |i| 0 <= i < post.unused_lists.len() implies valid_ll(post.pages, post.unused_dlist_headers[i], post.unused_lists[i])
         by {
-            assert(valid_ll(pre.pages, pre.unused_dlist_headers[i], pre.unused_lists[i]));
+//            assert(valid_ll(pre.pages, pre.unused_dlist_headers[i], pre.unused_lists[i]));
             assert(valid_ll_i(pre.pages, pre.unused_lists[sbin_idx], list_idx));
             let pre_ll = pre.unused_lists[i];
             let ll = post.unused_lists[i];
             if i == sbin_idx {
-                assert(list_idx < pre_ll.len());
+//                assert(list_idx < pre_ll.len());
                 assert forall |j| 0 <= j < ll.len() implies valid_ll_i(post.pages, ll, j)
                 by {
                     if j < list_idx {
                         pre.ll_unused_distinct(i, j, i, list_idx);
-                        assert(ll[j] != page_id);
+//                        assert(ll[j] != page_id);
                         match dlist_entry.prev {
                             Some(pid) => {
                                 if j < list_idx - 1 {
                                     pre.ll_unused_distinct(i, j, i, list_idx - 1);
-                                    assert(ll[j] != pid);
+//                                    assert(ll[j] != pid);
                                 }
                             }
                             None => { }
@@ -2022,29 +2022,29 @@ state_machine!{ PageOrg {
                         match dlist_entry.next {
                             Some(pid) => {
                                 pre.ll_unused_distinct(i, j, i, list_idx + 1);
-                                assert(ll[j] != pid);
+//                                assert(ll[j] != pid);
                             }
                             None => { }
                         }
                         assert(valid_ll_i(pre.pages, pre_ll, j));
                         if j < list_idx - 1 {
-                            assert(valid_ll_i(post.pages, ll, j));
+//                            assert(valid_ll_i(post.pages, ll, j));
                         } else {
-                            assert(j == list_idx - 1);
+//                            assert(j == list_idx - 1);
                             if list_idx == pre_ll.len() - 1 {
-                                assert(valid_ll_i(post.pages, ll, j));
+//                                assert(valid_ll_i(post.pages, ll, j));
                             } else {
-                                assert(post.pages[ll[j]].dlist_entry.unwrap().next == get_next(ll, j));
-                                assert(valid_ll_i(post.pages, ll, j));
+//                                assert(post.pages[ll[j]].dlist_entry.unwrap().next == get_next(ll, j));
+//                                assert(valid_ll_i(post.pages, ll, j));
                             }
                         }
                     } else {
                         pre.ll_unused_distinct(i, j+1, i, list_idx);
-                        assert(ll[j] != page_id);
+//                        assert(ll[j] != page_id);
                         match dlist_entry.prev {
                             Some(pid) => {
                                 pre.ll_unused_distinct(i, j+1, sbin_idx, list_idx - 1);
-                                assert(ll[j] != pid);
+//                                assert(ll[j] != pid);
                             }
                             None => { }
                         }
@@ -2052,20 +2052,20 @@ state_machine!{ PageOrg {
                             Some(pid) => {
                                 if j > list_idx {
                                     pre.ll_unused_distinct(i, j+1, sbin_idx, list_idx + 1);
-                                    assert(ll[j] != pid);
+//                                    assert(ll[j] != pid);
                                 }
                             }
                             None => { }
                         }
                         assert(valid_ll_i(pre.pages, pre_ll, j + 1));
                         if j > list_idx {
-                            assert(valid_ll_i(post.pages, ll, j));
+//                            assert(valid_ll_i(post.pages, ll, j));
                         } else {
-                            assert(valid_ll_i(post.pages, ll, j));
+//                            assert(valid_ll_i(post.pages, ll, j));
                         }
                     }
                 }
-                assert(valid_ll(post.pages, post.unused_dlist_headers[i], post.unused_lists[i]));
+//                assert(valid_ll(post.pages, post.unused_dlist_headers[i], post.unused_lists[i]));
             } else {
                 assert forall |j| 0 <= j < ll.len() implies valid_ll_i(post.pages, ll, j)
                 by {
@@ -2073,20 +2073,20 @@ state_machine!{ PageOrg {
                     match dlist_entry.prev {
                         Some(pid) => {
                             pre.ll_unused_distinct(i, j, sbin_idx, list_idx - 1);
-                            assert(ll[j] != pid);
+//                            assert(ll[j] != pid);
                         }
                         None => { }
                     }
                     match dlist_entry.next {
                         Some(pid) => {
                             pre.ll_unused_distinct(i, j, sbin_idx, list_idx + 1);
-                            assert(ll[j] != pid);
+//                            assert(ll[j] != pid);
                         }
                         None => { }
                     }
                     assert(valid_ll_i(pre.pages, ll, j));
                 }
-                assert(valid_ll(post.pages, post.unused_dlist_headers[i], post.unused_lists[i]));
+//                assert(valid_ll(post.pages, post.unused_dlist_headers[i], post.unused_lists[i]));
             }
         }
     }
@@ -2105,15 +2105,15 @@ state_machine!{ PageOrg {
         let segment_id = page_id.segment_id;
         Self::attached_ranges_except(pre, post, segment_id);
         if pre.popped.is_No() {
-            assert(post.good_range0(segment_id));
+//            assert(post.good_range0(segment_id));
             Self::rec_take_page_from_unused_queue(pre, post, page_id, sbin_idx, list_idx,
                 pre.pages[PageId { segment_id, idx: 0 }].count.unwrap() as int);
             //assert(post.attached_ranges());
         } else {
             reveal(State::attached_rec);
-            assert(pre.attached_rec(segment_id,
-                page_id.idx + pre.pages[page_id].count.unwrap() as int,
-                false));
+//            assert(pre.attached_rec(segment_id,
+//                page_id.idx + pre.pages[page_id].count.unwrap() as int,
+//                false));
             /*assert forall |pid: PageId|
                 //(pre.pages.dom().contains(pid) <==> post.pages.dom().contains(pid))
                 pre.pages.dom().contains(pid) &&
@@ -2131,9 +2131,9 @@ state_machine!{ PageOrg {
             Self::attached_rec_same(pre, post, segment_id,
                 page_id.idx + pre.pages[page_id].count.unwrap() as int,
                 false);
-            assert(post.attached_rec(segment_id,
-                page_id.idx + pre.pages[page_id].count.unwrap() as int,
-                false));
+//            assert(post.attached_rec(segment_id,
+//                page_id.idx + pre.pages[page_id].count.unwrap() as int,
+//                false));
             /*assert(post.popped.get_SegmentFreeing_0() == segment_id);
             assert(post.popped.get_SegmentFreeing_1() == 
                 page_id.idx + pre.pages[page_id].count.unwrap() as int);
@@ -2159,10 +2159,10 @@ state_machine!{ PageOrg {
         by {
             if i == sbin_idx && j >= list_idx {
                 pre.ll_unused_distinct(i, j+1, sbin_idx, list_idx);
-                assert(post.unused_lists[i][j] != page_id);
+//                assert(post.unused_lists[i][j] != page_id);
             } else {
                 pre.ll_unused_distinct(i, j, sbin_idx, list_idx);
-                assert(post.unused_lists[i][j] != page_id);
+//                assert(post.unused_lists[i][j] != page_id);
             }
         }
     }
@@ -2197,14 +2197,14 @@ state_machine!{ PageOrg {
         reveal(State::attached_rec);
         let segment_id = pid.segment_id;
         let page_id = PageId { segment_id, idx: idx as nat };
-        assert(pid.idx < SLICES_PER_SEGMENT);
+//        assert(pid.idx < SLICES_PER_SEGMENT);
         if idx == SLICES_PER_SEGMENT {
-            assert(post.attached_rec(pid.segment_id, idx, idx <= pid.idx));
+//            assert(post.attached_rec(pid.segment_id, idx, idx <= pid.idx));
         } else if idx > SLICES_PER_SEGMENT {
-            assert(false);
+//            assert(false);
         } else if Self::is_the_popped(segment_id, idx, post.popped) {
             Self::rec_take_page_from_unused_queue(pre, post, pid, sbin_idx, list_idx, idx + post.popped_len());
-            assert(post.attached_rec(pid.segment_id, idx, idx <= pid.idx));
+//            assert(post.attached_rec(pid.segment_id, idx, idx <= pid.idx));
         } else {
             Self::rec_take_page_from_unused_queue(pre, post, pid, sbin_idx, list_idx, idx + pre.pages[page_id].count.unwrap());
             pre.lemma_range_not_used(pid);
@@ -2234,16 +2234,16 @@ state_machine!{ PageOrg {
 
         let next_page_id = PageId { idx: (page_id.idx + target_count) as nat, .. page_id };
         let last_page_id = PageId { idx: (page_id.idx + current_count - 1) as nat, .. page_id };
-        assert(page_id != next_page_id);
-        assert(page_id != last_page_id);
+//        assert(page_id != next_page_id);
+//        assert(page_id != last_page_id);
 
         if pre.unused_dlist_headers[sbin_idx].first.is_some() {
-            assert(pre.unused_dlist_headers[sbin_idx].first.unwrap()
-                != next_page_id);
-            assert(pre.unused_dlist_headers[sbin_idx].first.unwrap()
-                != last_page_id);
-            assert(pre.unused_dlist_headers[sbin_idx].first.unwrap()
-                != page_id);
+//            assert(pre.unused_dlist_headers[sbin_idx].first.unwrap()
+//                != next_page_id);
+//            assert(pre.unused_dlist_headers[sbin_idx].first.unwrap()
+//                != last_page_id);
+//            assert(pre.unused_dlist_headers[sbin_idx].first.unwrap()
+//                != page_id);
         }
 
         //assert(post.pages[page_id].offset == Some(0nat));
@@ -2254,8 +2254,8 @@ state_machine!{ PageOrg {
         //assert(post.pages[last_page_id].count.is_none());
 
         if last_page_id != next_page_id {
-            assert(pre.pages[last_page_id].count.is_none());
-            assert(post.pages[last_page_id].count.is_none());
+//            assert(pre.pages[last_page_id].count.is_none());
+//            assert(post.pages[last_page_id].count.is_none());
         }
 
         /*assert forall |pid: PageId|
@@ -2289,43 +2289,43 @@ state_machine!{ PageOrg {
 
         assert forall |i| 0 <= i < post.unused_lists.len() implies valid_ll(post.pages, post.unused_dlist_headers[i], post.unused_lists[i])
         by {
-            assert(valid_ll(pre.pages, pre.unused_dlist_headers[i], pre.unused_lists[i]));
+//            assert(valid_ll(pre.pages, pre.unused_dlist_headers[i], pre.unused_lists[i]));
             let pre_ll = pre.unused_lists[i];
             let ll = post.unused_lists[i];
             if i == sbin_idx {
                 assert forall |j| 0 <= j < ll.len() implies valid_ll_i(post.pages, ll, j)
                 by {
                     if j == 0 {
-                        assert(valid_ll_i(post.pages, ll, j));
+//                        assert(valid_ll_i(post.pages, ll, j));
                     } else {
                         if j > 1 {
-                            assert(ll[j-1] != next_page_id);
+//                            assert(ll[j-1] != next_page_id);
                         }
                         assert(valid_ll_i(pre.pages, pre_ll, j-1));
                         if j == 1 {
-                            assert(valid_ll_i(post.pages, ll, j));
+//                            assert(valid_ll_i(post.pages, ll, j));
                         } else {
                             pre.ll_unused_distinct(i, j-1, i, 0);
-                            assert(ll[j] != ll[1]);
-                            assert(valid_ll_i(post.pages, ll, j));
+//                            assert(ll[j] != ll[1]);
+//                            assert(valid_ll_i(post.pages, ll, j));
                         }
                     }
                 }
-                assert(valid_ll(post.pages, post.unused_dlist_headers[i], post.unused_lists[i]));
+//                assert(valid_ll(post.pages, post.unused_dlist_headers[i], post.unused_lists[i]));
             } else {
                 assert forall |j| 0 <= j < ll.len() implies valid_ll_i(post.pages, ll, j)
                 by {
-                    assert(ll[j] != next_page_id);
+//                    assert(ll[j] != next_page_id);
                     match queue_first_page_id {
                         Some(pid) => {
                             pre.ll_unused_distinct(i, j, sbin_idx, 0);
-                            assert(ll[j] != pid);
+//                            assert(ll[j] != pid);
                         }
                         None => { }
                     }
                     assert(valid_ll_i(pre.pages, ll, j));
                 }
-                assert(valid_ll(post.pages, post.unused_dlist_headers[i], post.unused_lists[i]));
+//                assert(valid_ll(post.pages, post.unused_dlist_headers[i], post.unused_lists[i]));
             }
         }
 
@@ -2338,7 +2338,7 @@ state_machine!{ PageOrg {
         assert(post.attached_ranges()) by {
             let segment_id = pre.popped.get_VeryUnready_0();
             Self::attached_ranges_except(pre, post, segment_id);
-            assert(post.good_range0(segment_id));
+//            assert(post.good_range0(segment_id));
             Self::rec_split_page(pre, post, page_id, current_count, target_count, sbin_idx, 
                 pre.pages[PageId { segment_id, idx: 0 }].count.unwrap() as int, true);
         }
@@ -2356,17 +2356,17 @@ state_machine!{ PageOrg {
         let segment_id = pre.popped.get_VeryUnready_0();
         let page_id = PageId { segment_id, idx: idx as nat };
         if idx == SLICES_PER_SEGMENT {
-            assert(post.attached_rec(pre.popped.get_VeryUnready_0(), idx, sp));
+//            assert(post.attached_rec(pre.popped.get_VeryUnready_0(), idx, sp));
         } else if idx > SLICES_PER_SEGMENT {
-            assert(false);
+//            assert(false);
         } else if Self::is_the_popped(segment_id, idx, pre.popped) {
             Self::rec_split_page(pre, post, pid, current_count, target_count, sbin_idx, idx + pre.popped_len(), false);
             assert(post.attached_rec(pre.popped.get_VeryUnready_0(), idx + post.popped_len(), false));
-            assert(post.attached_rec(pre.popped.get_VeryUnready_0(), idx, sp));
+//            assert(post.attached_rec(pre.popped.get_VeryUnready_0(), idx, sp));
         } else {
             Self::rec_split_page(pre, post, pid, current_count, target_count, sbin_idx, idx + pre.pages[page_id].count.unwrap(), sp);
             pre.good_range_disjoint_very_unready(page_id);
-            assert(post.attached_rec(pre.popped.get_VeryUnready_0(), idx, sp));
+//            assert(post.attached_rec(pre.popped.get_VeryUnready_0(), idx, sp));
         }
     }
 
@@ -2389,7 +2389,7 @@ state_machine!{ PageOrg {
                         && post.pages[pid].dlist_entry.is_none()
                         && post.pages[pid].full.is_none()
         by { }*/
-        assert(post.inv_ready());
+//        assert(post.inv_ready());
 
         assert(post.ll_inv_exists_in_some_list()) by {
             reveal(State::ll_inv_exists_in_some_list);
@@ -2412,12 +2412,12 @@ state_machine!{ PageOrg {
         }
         Self::attached_ranges_all(pre, post);
 
-        assert forall |i: int, j: int| 0 <= i < post.unused_lists.len()
-            && 0 <= j < post.unused_lists[i].len() implies post.unused_lists[i][j] != page_id
-        by {
-            assert(valid_ll(pre.pages, pre.unused_dlist_headers[i], pre.unused_lists[i]));
-            assert(valid_ll_i(pre.pages, pre.unused_lists[i], j));
-        }
+//        assert forall |i: int, j: int| 0 <= i < post.unused_lists.len()
+//            && 0 <= j < post.unused_lists[i].len() implies post.unused_lists[i][j] != page_id
+//        by {
+////            assert(valid_ll(pre.pages, pre.unused_dlist_headers[i], pre.unused_lists[i]));
+////            assert(valid_ll_i(pre.pages, pre.unused_lists[i], j));
+//        }
     }
 
     #[inductive(set_range_to_not_used)]
@@ -2435,12 +2435,12 @@ state_machine!{ PageOrg {
         }
         Self::attached_ranges_all(pre, post);
 
-        assert forall |i: int, j: int| 0 <= i < post.unused_lists.len()
-            && 0 <= j < post.unused_lists[i].len() implies post.unused_lists[i][j] != page_id
-        by {
-            assert(valid_ll(pre.pages, pre.unused_dlist_headers[i], pre.unused_lists[i]));
-            assert(valid_ll_i(pre.pages, pre.unused_lists[i], j));
-        }
+//        assert forall |i: int, j: int| 0 <= i < post.unused_lists.len()
+//            && 0 <= j < post.unused_lists[i].len() implies post.unused_lists[i][j] != page_id
+//        by {
+////            assert(valid_ll(pre.pages, pre.unused_dlist_headers[i], pre.unused_lists[i]));
+////            assert(valid_ll_i(pre.pages, pre.unused_lists[i], j));
+//        }
     }
 
     #[verifier::spinoff_prover]
@@ -2455,47 +2455,47 @@ state_machine!{ PageOrg {
 
         assert forall |i| 0 <= i < post.used_lists.len() implies valid_ll(post.pages, post.used_dlist_headers[i], post.used_lists[i])
         by {
-            assert(valid_ll(pre.pages, pre.used_dlist_headers[i], pre.used_lists[i]));
+//            assert(valid_ll(pre.pages, pre.used_dlist_headers[i], pre.used_lists[i]));
             let pre_ll = pre.used_lists[i];
             let ll = post.used_lists[i];
             if i == bin_idx {
                 assert forall |j| 0 <= j < ll.len() implies valid_ll_i(post.pages, ll, j)
                 by {
                     if j == 0 {
-                        assert(valid_ll_i(post.pages, ll, j));
+//                        assert(valid_ll_i(post.pages, ll, j));
                     } else {
                         if j > 1 {
-                            assert(ll[j-1] != page_id);
+//                            assert(ll[j-1] != page_id);
                         }
                         assert(valid_ll_i(pre.pages, pre_ll, j-1));
                         if j == 1 {
-                            assert(valid_ll_i(post.pages, ll, j));
+//                            assert(valid_ll_i(post.pages, ll, j));
                         } else {
                             pre.ll_used_distinct(i, j-1, i, 0);
-                            assert(ll[j] != ll[1]);
-                            assert(valid_ll_i(post.pages, ll, j));
+//                            assert(ll[j] != ll[1]);
+//                            assert(valid_ll_i(post.pages, ll, j));
                         }
                     }
                 }
-                assert(valid_ll(post.pages, post.used_dlist_headers[i], post.used_lists[i]));
+//                assert(valid_ll(post.pages, post.used_dlist_headers[i], post.used_lists[i]));
             } else {
                 assert forall |j| 0 <= j < ll.len() implies valid_ll_i(post.pages, ll, j)
                 by {
-                    assert(ll[j] != page_id);
+//                    assert(ll[j] != page_id);
                     match queue_first_page_id {
                         Some(pid) => {
                             pre.ll_used_distinct(i, j, bin_idx, 0);
-                            assert(ll[j] != pid);
+//                            assert(ll[j] != pid);
                         }
                         None => { }
                     }
                     assert(valid_ll_i(pre.pages, ll, j));
                 }
-                assert(valid_ll(post.pages, post.used_dlist_headers[i], post.used_lists[i]));
+//                assert(valid_ll(post.pages, post.used_dlist_headers[i], post.used_lists[i]));
             }
         }
 
-        assert(valid_bin_idx(bin_idx) || bin_idx == BIN_FULL);
+//        assert(valid_bin_idx(bin_idx) || bin_idx == BIN_FULL);
 
         /*assert forall |i, j| 0 <= i < post.used_lists.len()
             && 0 <= j < post.used_lists[i].len() implies
@@ -2539,16 +2539,16 @@ state_machine!{ PageOrg {
         let segment_id = pre.popped.get_Used_0().segment_id;
         let page_id = PageId { segment_id, idx: idx as nat };
         if idx == SLICES_PER_SEGMENT {
-            assert(post.attached_rec(segment_id, idx, false));
+//            assert(post.attached_rec(segment_id, idx, false));
         } else if idx > SLICES_PER_SEGMENT {
-            assert(false);
+//            assert(false);
         } else if Self::is_the_popped(segment_id, idx, pre.popped) {
             Self::rec_into_used_list(pre, post, bin_idx, idx + pre.popped_len(), false);
-            assert(post.attached_rec(segment_id, idx, false));
+//            assert(post.attached_rec(segment_id, idx, false));
         } else {
             Self::rec_into_used_list(pre, post, bin_idx, idx + pre.pages[page_id].count.unwrap(), sp);
             //pre.good_range_disjoint_very_unready(page_id);
-            assert(post.attached_rec(segment_id, idx, false));
+//            assert(post.attached_rec(segment_id, idx, false));
         }
     }
 
@@ -2563,7 +2563,7 @@ state_machine!{ PageOrg {
 
         assert(post.attached_ranges()) by {
             reveal_with_fuel(State::attached_rec);
-            assert(post.attached_ranges_segment(segment_id));
+//            assert(post.attached_ranges_segment(segment_id));
             Self::attached_ranges_except(pre, post, segment_id);
         }
 
@@ -2574,10 +2574,10 @@ state_machine!{ PageOrg {
     fn forget_about_first_page_inductive(pre: Self, post: Self, count: int) {
         let segment_id = pre.popped.get_SegmentCreating_0();
         let page_id = PageId { segment_id, idx: count as nat };
-        assert(post.good_range_very_unready(page_id));
-        assert(post.popped_basics());
+//        assert(post.good_range_very_unready(page_id));
+//        assert(post.popped_basics());
         Self::ucount_preserve_all(pre, post);
-        assert(post.count_is_right());
+//        assert(post.count_is_right());
         Self::unchanged_used_ll(pre, post);
         Self::unchanged_unused_ll(pre, post);
         assert(post.attached_ranges()) by {
@@ -2596,15 +2596,15 @@ state_machine!{ PageOrg {
                             Some((pid.idx - page_id.idx) as nat)
             by {
             }*/
-            assert(post.good_range0(segment_id));
-            assert(post.popped_for_seg(segment_id));
+//            assert(post.good_range0(segment_id));
+//            assert(post.popped_for_seg(segment_id));
 
-            assert(count + post.popped_len() == SLICES_PER_SEGMENT);
+//            assert(count + post.popped_len() == SLICES_PER_SEGMENT);
 
             assert(post.attached_rec(segment_id, SLICES_PER_SEGMENT as int, false));
-            assert(post.attached_rec(segment_id, count, true));
-            assert(post.attached_rec0(segment_id, true));
-            assert(post.attached_ranges_segment(segment_id));
+//            assert(post.attached_rec(segment_id, count, true));
+//            assert(post.attached_rec0(segment_id, true));
+//            assert(post.attached_ranges_segment(segment_id));
 
             Self::attached_ranges_except(pre, post, segment_id);
         }
@@ -2626,43 +2626,43 @@ state_machine!{ PageOrg {
         Self::unchanged_used_ll(pre, post);
         assert forall |i| 0 <= i < post.unused_lists.len() implies valid_ll(post.pages, post.unused_dlist_headers[i], post.unused_lists[i])
         by {
-            assert(valid_ll(pre.pages, pre.unused_dlist_headers[i], pre.unused_lists[i]));
+//            assert(valid_ll(pre.pages, pre.unused_dlist_headers[i], pre.unused_lists[i]));
             let pre_ll = pre.unused_lists[i];
             let ll = post.unused_lists[i];
             if i == sbin_idx {
                 assert forall |j| 0 <= j < ll.len() implies valid_ll_i(post.pages, ll, j)
                 by {
                     if j == 0 {
-                        assert(valid_ll_i(post.pages, ll, j));
+//                        assert(valid_ll_i(post.pages, ll, j));
                     } else {
                         if j > 1 {
-                            assert(ll[j-1] != first_page);
+//                            assert(ll[j-1] != first_page);
                         }
                         assert(valid_ll_i(pre.pages, pre_ll, j-1));
                         if j == 1 {
-                            assert(valid_ll_i(post.pages, ll, j));
+//                            assert(valid_ll_i(post.pages, ll, j));
                         } else {
                             pre.ll_unused_distinct(i, j-1, i, 0);
-                            assert(ll[j] != ll[1]);
-                            assert(valid_ll_i(post.pages, ll, j));
+//                            assert(ll[j] != ll[1]);
+//                            assert(valid_ll_i(post.pages, ll, j));
                         }
                     }
                 }
-                assert(valid_ll(post.pages, post.unused_dlist_headers[i], post.unused_lists[i]));
+//                assert(valid_ll(post.pages, post.unused_dlist_headers[i], post.unused_lists[i]));
             } else {
                 assert forall |j| 0 <= j < ll.len() implies valid_ll_i(post.pages, ll, j)
                 by {
-                    assert(ll[j] != first_page);
+//                    assert(ll[j] != first_page);
                     match queue_first_page_id {
                         Some(pid) => {
                             pre.ll_unused_distinct(i, j, sbin_idx, 0);
-                            assert(ll[j] != pid);
+//                            assert(ll[j] != pid);
                         }
                         None => { }
                     }
                     assert(valid_ll_i(pre.pages, ll, j));
                 }
-                assert(valid_ll(post.pages, post.unused_dlist_headers[i], post.unused_lists[i]));
+//                assert(valid_ll(post.pages, post.unused_dlist_headers[i], post.unused_lists[i]));
             }
         }
 
@@ -2674,7 +2674,7 @@ state_machine!{ PageOrg {
 
         assert(post.attached_ranges()) by {
             Self::attached_ranges_except(pre, post, segment_id);
-            assert(post.good_range0(segment_id));
+//            assert(post.good_range0(segment_id));
             Self::rec_free_to_unused_queue(pre, post, sbin_idx, 
                 pre.pages[PageId { segment_id, idx: 0 }].count.unwrap() as int, true);
         }
@@ -2693,9 +2693,9 @@ state_machine!{ PageOrg {
         let segment_id = pre.popped.get_VeryUnready_0();
         let page_id = PageId { segment_id, idx: idx as nat };
         if idx == SLICES_PER_SEGMENT {
-            assert(post.attached_rec(pre.popped.get_VeryUnready_0(), idx, false));
+//            assert(post.attached_rec(pre.popped.get_VeryUnready_0(), idx, false));
         } else if idx > SLICES_PER_SEGMENT {
-            assert(false);
+//            assert(false);
         } else if Self::is_the_popped(segment_id, idx, pre.popped) {
             Self::rec_free_to_unused_queue(pre, post, sbin_idx, idx + pre.popped_len(), false);
             /*assert(pre.good_range_very_unready(page_id));
@@ -2725,11 +2725,11 @@ state_machine!{ PageOrg {
                 }
             }
             assert(post.good_range_unused(page_id));*/
-            assert(post.attached_rec(pre.popped.get_VeryUnready_0(), idx, false));
+//            assert(post.attached_rec(pre.popped.get_VeryUnready_0(), idx, false));
         } else {
             Self::rec_free_to_unused_queue(pre, post, sbin_idx, idx + pre.pages[page_id].count.unwrap(), sp);
             pre.good_range_disjoint_very_unready(page_id);
-            assert(post.attached_rec(pre.popped.get_VeryUnready_0(), idx, false));
+//            assert(post.attached_rec(pre.popped.get_VeryUnready_0(), idx, false));
         }
     }
 
@@ -2750,22 +2750,22 @@ state_machine!{ PageOrg {
 
         assert forall |i| 0 <= i < post.used_lists.len() implies valid_ll(post.pages, post.used_dlist_headers[i], post.used_lists[i])
         by {
-            assert(valid_ll(pre.pages, pre.used_dlist_headers[i], pre.used_lists[i]));
+//            assert(valid_ll(pre.pages, pre.used_dlist_headers[i], pre.used_lists[i]));
             assert(valid_ll_i(pre.pages, pre.used_lists[bin_idx], list_idx));
             let pre_ll = pre.used_lists[i];
             let ll = post.used_lists[i];
             if i == bin_idx {
-                assert(list_idx < pre_ll.len());
+//                assert(list_idx < pre_ll.len());
                 assert forall |j| 0 <= j < ll.len() implies valid_ll_i(post.pages, ll, j)
                 by {
                     if j < list_idx {
                         pre.ll_used_distinct(i, j, i, list_idx);
-                        assert(ll[j] != page_id);
+//                        assert(ll[j] != page_id);
                         match dlist_entry.prev {
                             Some(pid) => {
                                 if j < list_idx - 1 {
                                     pre.ll_used_distinct(i, j, i, list_idx - 1);
-                                    assert(ll[j] != pid);
+//                                    assert(ll[j] != pid);
                                 }
                             }
                             None => { }
@@ -2773,29 +2773,29 @@ state_machine!{ PageOrg {
                         match dlist_entry.next {
                             Some(pid) => {
                                 pre.ll_used_distinct(i, j, i, list_idx + 1);
-                                assert(ll[j] != pid);
+//                                assert(ll[j] != pid);
                             }
                             None => { }
                         }
                         assert(valid_ll_i(pre.pages, pre_ll, j));
                         if j < list_idx - 1 {
-                            assert(valid_ll_i(post.pages, ll, j));
+//                            assert(valid_ll_i(post.pages, ll, j));
                         } else {
-                            assert(j == list_idx - 1);
+//                            assert(j == list_idx - 1);
                             if list_idx == pre_ll.len() - 1 {
-                                assert(valid_ll_i(post.pages, ll, j));
+//                                assert(valid_ll_i(post.pages, ll, j));
                             } else {
-                                assert(post.pages[ll[j]].dlist_entry.unwrap().next == get_next(ll, j));
-                                assert(valid_ll_i(post.pages, ll, j));
+//                                assert(post.pages[ll[j]].dlist_entry.unwrap().next == get_next(ll, j));
+//                                assert(valid_ll_i(post.pages, ll, j));
                             }
                         }
                     } else {
                         pre.ll_used_distinct(i, j+1, i, list_idx);
-                        assert(ll[j] != page_id);
+//                        assert(ll[j] != page_id);
                         match dlist_entry.prev {
                             Some(pid) => {
                                 pre.ll_used_distinct(i, j+1, bin_idx, list_idx - 1);
-                                assert(ll[j] != pid);
+//                                assert(ll[j] != pid);
                             }
                             None => { }
                         }
@@ -2803,20 +2803,20 @@ state_machine!{ PageOrg {
                             Some(pid) => {
                                 if j > list_idx {
                                     pre.ll_used_distinct(i, j+1, bin_idx, list_idx + 1);
-                                    assert(ll[j] != pid);
+//                                    assert(ll[j] != pid);
                                 }
                             }
                             None => { }
                         }
                         assert(valid_ll_i(pre.pages, pre_ll, j + 1));
                         if j > list_idx {
-                            assert(valid_ll_i(post.pages, ll, j));
+//                            assert(valid_ll_i(post.pages, ll, j));
                         } else {
-                            assert(valid_ll_i(post.pages, ll, j));
+//                            assert(valid_ll_i(post.pages, ll, j));
                         }
                     }
                 }
-                assert(valid_ll(post.pages, post.used_dlist_headers[i], post.used_lists[i]));
+//                assert(valid_ll(post.pages, post.used_dlist_headers[i], post.used_lists[i]));
             } else {
                 assert forall |j| 0 <= j < ll.len() implies valid_ll_i(post.pages, ll, j)
                 by {
@@ -2824,20 +2824,20 @@ state_machine!{ PageOrg {
                     match dlist_entry.prev {
                         Some(pid) => {
                             pre.ll_used_distinct(i, j, bin_idx, list_idx - 1);
-                            assert(ll[j] != pid);
+//                            assert(ll[j] != pid);
                         }
                         None => { }
                     }
                     match dlist_entry.next {
                         Some(pid) => {
                             pre.ll_used_distinct(i, j, bin_idx, list_idx + 1);
-                            assert(ll[j] != pid);
+//                            assert(ll[j] != pid);
                         }
                         None => { }
                     }
                     assert(valid_ll_i(pre.pages, ll, j));
                 }
-                assert(valid_ll(post.pages, post.used_dlist_headers[i], post.used_lists[i]));
+//                assert(valid_ll(post.pages, post.used_dlist_headers[i], post.used_lists[i]));
             }
         }
 
@@ -2862,10 +2862,10 @@ state_machine!{ PageOrg {
         by {
             if i == bin_idx && j >= list_idx {
                 pre.ll_used_distinct(i, j+1, bin_idx, list_idx);
-                assert(post.used_lists[i][j] != page_id);
+//                assert(post.used_lists[i][j] != page_id);
             } else {
                 pre.ll_used_distinct(i, j, bin_idx, list_idx);
-                assert(post.used_lists[i][j] != page_id);
+//                assert(post.used_lists[i][j] != page_id);
             }
         }
     }
@@ -2907,14 +2907,14 @@ state_machine!{ PageOrg {
         reveal(State::attached_rec);
         let segment_id = pid.segment_id;
         let page_id = PageId { segment_id, idx: idx as nat };
-        assert(pid.idx < SLICES_PER_SEGMENT);
+//        assert(pid.idx < SLICES_PER_SEGMENT);
         if idx == SLICES_PER_SEGMENT {
-            assert(post.attached_rec(pid.segment_id, idx, idx <= pid.idx));
+//            assert(post.attached_rec(pid.segment_id, idx, idx <= pid.idx));
         } else if idx > SLICES_PER_SEGMENT {
-            assert(false);
+//            assert(false);
         } else if Self::is_the_popped(segment_id, idx, post.popped) {
             Self::rec_out_of_used_list(pre, post, pid, bin_idx, list_idx, idx + post.popped_len());
-            assert(post.attached_rec(pid.segment_id, idx, idx <= pid.idx));
+//            assert(post.attached_rec(pid.segment_id, idx, idx <= pid.idx));
         } else {
             Self::rec_out_of_used_list(pre, post, pid, bin_idx, list_idx, idx + pre.pages[page_id].count.unwrap());
             pre.lemma_range_used(pid);
@@ -2960,8 +2960,8 @@ state_machine!{ PageOrg {
             }
         }*/
 
-        assert(post.good_range_very_unready(cur_id));
-        assert(post.popped_basics());
+//        assert(post.good_range_very_unready(cur_id));
+//        assert(post.popped_basics());
 
         let n_count = pre.pages[page_id].count.unwrap();
         let sbin_idx = smallest_sbin_fitting_size(n_count as int);
@@ -2974,7 +2974,7 @@ state_machine!{ PageOrg {
 
         assert(post.attached_ranges()) by {
             Self::attached_ranges_except(pre, post, segment_id);
-            assert(post.good_range0(segment_id));
+//            assert(post.good_range0(segment_id));
             Self::rec_merge_with_after(pre, post,
                 pre.pages[PageId { segment_id, idx: 0 }].count.unwrap() as int, true);
         }
@@ -2990,14 +2990,14 @@ state_machine!{ PageOrg {
         by {
             if i == sbin_idx && j >= list_idx {
                 pre.ll_unused_distinct(i, j+1, sbin_idx, list_idx);
-                assert(post.unused_lists[i][j] != page_id);
+//                assert(post.unused_lists[i][j] != page_id);
             } else {
                 pre.ll_unused_distinct(i, j, sbin_idx, list_idx);
-                assert(post.unused_lists[i][j] != page_id);
+//                assert(post.unused_lists[i][j] != page_id);
             }
-            assert(is_unused_header(pre.pages[post.unused_lists[i][j]]));
+//            assert(is_unused_header(pre.pages[post.unused_lists[i][j]]));
         }
-        assert(post.ll_inv_valid_unused2());
+//        assert(post.ll_inv_valid_unused2());
     }
 
     pub proof fn merge_with_after_ll_inv_valid_unused(pre: Self, post: Self)
@@ -3019,22 +3019,22 @@ state_machine!{ PageOrg {
 
         assert forall |i| 0 <= i < post.unused_lists.len() implies valid_ll(post.pages, post.unused_dlist_headers[i], post.unused_lists[i])
         by {
-            assert(valid_ll(pre.pages, pre.unused_dlist_headers[i], pre.unused_lists[i]));
+//            assert(valid_ll(pre.pages, pre.unused_dlist_headers[i], pre.unused_lists[i]));
             assert(valid_ll_i(pre.pages, pre.unused_lists[sbin_idx], list_idx));
             let pre_ll = pre.unused_lists[i];
             let ll = post.unused_lists[i];
             if i == sbin_idx {
-                assert(list_idx < pre_ll.len());
+//                assert(list_idx < pre_ll.len());
                 assert forall |j| 0 <= j < ll.len() implies valid_ll_i(post.pages, ll, j)
                 by {
                     if j < list_idx {
                         pre.ll_unused_distinct(i, j, i, list_idx);
-                        assert(ll[j] != page_id);
+//                        assert(ll[j] != page_id);
                         match dlist_entry.prev {
                             Some(pid) => {
                                 if j < list_idx - 1 {
                                     pre.ll_unused_distinct(i, j, i, list_idx - 1);
-                                    assert(ll[j] != pid);
+//                                    assert(ll[j] != pid);
                                 }
                             }
                             None => { }
@@ -3042,29 +3042,29 @@ state_machine!{ PageOrg {
                         match dlist_entry.next {
                             Some(pid) => {
                                 pre.ll_unused_distinct(i, j, i, list_idx + 1);
-                                assert(ll[j] != pid);
+//                                assert(ll[j] != pid);
                             }
                             None => { }
                         }
                         assert(valid_ll_i(pre.pages, pre_ll, j));
                         if j < list_idx - 1 {
-                            assert(valid_ll_i(post.pages, ll, j));
+//                            assert(valid_ll_i(post.pages, ll, j));
                         } else {
-                            assert(j == list_idx - 1);
+//                            assert(j == list_idx - 1);
                             if list_idx == pre_ll.len() - 1 {
-                                assert(valid_ll_i(post.pages, ll, j));
+//                                assert(valid_ll_i(post.pages, ll, j));
                             } else {
-                                assert(post.pages[ll[j]].dlist_entry.unwrap().next == get_next(ll, j));
-                                assert(valid_ll_i(post.pages, ll, j));
+//                                assert(post.pages[ll[j]].dlist_entry.unwrap().next == get_next(ll, j));
+//                                assert(valid_ll_i(post.pages, ll, j));
                             }
                         }
                     } else {
                         pre.ll_unused_distinct(i, j+1, i, list_idx);
-                        assert(ll[j] != page_id);
+//                        assert(ll[j] != page_id);
                         match dlist_entry.prev {
                             Some(pid) => {
                                 pre.ll_unused_distinct(i, j+1, sbin_idx, list_idx - 1);
-                                assert(ll[j] != pid);
+//                                assert(ll[j] != pid);
                             }
                             None => { }
                         }
@@ -3072,20 +3072,20 @@ state_machine!{ PageOrg {
                             Some(pid) => {
                                 if j > list_idx {
                                     pre.ll_unused_distinct(i, j+1, sbin_idx, list_idx + 1);
-                                    assert(ll[j] != pid);
+//                                    assert(ll[j] != pid);
                                 }
                             }
                             None => { }
                         }
                         assert(valid_ll_i(pre.pages, pre_ll, j + 1));
                         if j > list_idx {
-                            assert(valid_ll_i(post.pages, ll, j));
+//                            assert(valid_ll_i(post.pages, ll, j));
                         } else {
-                            assert(valid_ll_i(post.pages, ll, j));
+//                            assert(valid_ll_i(post.pages, ll, j));
                         }
                     }
                 }
-                assert(valid_ll(post.pages, post.unused_dlist_headers[i], post.unused_lists[i]));
+//                assert(valid_ll(post.pages, post.unused_dlist_headers[i], post.unused_lists[i]));
             } else {
                 assert forall |j| 0 <= j < ll.len() implies valid_ll_i(post.pages, ll, j)
                 by {
@@ -3093,20 +3093,20 @@ state_machine!{ PageOrg {
                     match dlist_entry.prev {
                         Some(pid) => {
                             pre.ll_unused_distinct(i, j, sbin_idx, list_idx - 1);
-                            assert(ll[j] != pid);
+//                            assert(ll[j] != pid);
                         }
                         None => { }
                     }
                     match dlist_entry.next {
                         Some(pid) => {
                             pre.ll_unused_distinct(i, j, sbin_idx, list_idx + 1);
-                            assert(ll[j] != pid);
+//                            assert(ll[j] != pid);
                         }
                         None => { }
                     }
                     assert(valid_ll_i(pre.pages, ll, j));
                 }
-                assert(valid_ll(post.pages, post.unused_dlist_headers[i], post.unused_lists[i]));
+//                assert(valid_ll(post.pages, post.unused_dlist_headers[i], post.unused_lists[i]));
             }
         }
     }
@@ -3154,24 +3154,24 @@ state_machine!{ PageOrg {
         let page_id = PageId { segment_id, idx: idx as nat };
         let pidx = pre.popped.get_VeryUnready_1() + pre.popped.get_VeryUnready_2();
         if idx == SLICES_PER_SEGMENT {
-            assert(post.attached_rec(segment_id, idx, sp));
+//            assert(post.attached_rec(segment_id, idx, sp));
         } else if idx > SLICES_PER_SEGMENT {
-            assert(false);
+//            assert(false);
         } else if Self::is_the_popped(segment_id, idx, post.popped) {
             assert(pre.attached_rec(segment_id, idx + pre.popped_len(), false));
             Self::rec_merge_with_after(pre, post, idx + post.popped_len(), false);
-            assert(post.attached_rec(pre.popped.get_VeryUnready_0(), idx, sp));
+//            assert(post.attached_rec(pre.popped.get_VeryUnready_0(), idx, sp));
         } else {
             if sp {
                 pre.sp_true_implies_le(idx);
             }
-            assert(pidx >= 0);
+//            assert(pidx >= 0);
             let pid = PageId { segment_id, idx: pidx as nat };
             let c = pre.pages[pid].count.unwrap();
-            assert(pid.idx + c <= idx || idx + pre.pages[page_id].count.unwrap() <= pid.idx);
+//            assert(pid.idx + c <= idx || idx + pre.pages[page_id].count.unwrap() <= pid.idx);
             pre.lemma_range_not_used(pid);
             Self::rec_merge_with_after(pre, post, idx + pre.pages[page_id].count.unwrap(), sp);
-            assert(post.attached_rec(pre.popped.get_VeryUnready_0(), idx, sp));
+//            assert(post.attached_rec(pre.popped.get_VeryUnready_0(), idx, sp));
         }
     }
 
@@ -3202,24 +3202,24 @@ state_machine!{ PageOrg {
         let page_id = PageId { segment_id, idx: idx as nat };
         let pidx = pre.popped.get_VeryUnready_1() + pre.popped.get_VeryUnready_2();
         if idx == SLICES_PER_SEGMENT {
-            assert(post.attached_rec(segment_id, idx, sp));
+//            assert(post.attached_rec(segment_id, idx, sp));
         } else if idx > SLICES_PER_SEGMENT {
-            assert(false);
+//            assert(false);
         } else if Self::is_the_popped(segment_id, idx, pre.popped) {
-            assert(false);
+//            assert(false);
         } else {
             if idx + pre.pages[page_id].count.unwrap() == pre.popped.get_VeryUnready_1() {
                 assert(pre.attached_rec(segment_id, idx + pre.pages[page_id].count.unwrap(), sp));
                 Self::rec_merge_with_before(pre, post, pre.popped.get_VeryUnready_1() + pre.popped_len(), false);
-                assert(post.attached_rec(segment_id, idx, sp));
+//                assert(post.attached_rec(segment_id, idx, sp));
             } else {
                 Self::rec_merge_with_before(pre, post, idx + pre.pages[page_id].count.unwrap(), sp);
                 //assert(pid.idx + c <= idx || idx + pre.pages[page_id].count.unwrap() <= pid.idx);
                 if sp {
                     pre.sp_true_implies_le(idx);
                 }
-                assert(first_id.idx + p_count <= page_id.idx || page_id.idx + pre.pages[page_id].count.unwrap() <= first_id.idx);
-                assert(post.attached_rec(segment_id, idx, sp));
+//                assert(first_id.idx + p_count <= page_id.idx || page_id.idx + pre.pages[page_id].count.unwrap() <= first_id.idx);
+//                assert(post.attached_rec(segment_id, idx, sp));
             }
             /*
             if sp {
@@ -3263,24 +3263,24 @@ state_machine!{ PageOrg {
         //    pre.unused_lists.update(sbin_idx, pre.unused_lists[sbin_idx].remove(list_idx)));
         //assert(forall |pid| pid != page_id && is_in_lls(pid, pre.unused_lists) ==> is_in_lls(pid, post.unused_lists));
         reveal(State::ll_inv_exists_in_some_list);
-        assert forall |pid: PageId| #[trigger] post.pages.dom().contains(pid)
-            && post.pages[pid].offset == Some(0nat)
-            && pid.idx != 0
-            && !post.expect_out_of_lists(pid)
-              implies is_in_lls(pid, post.used_lists) || is_in_lls(pid, post.unused_lists)
-        by {
-            if pid == page_id {
-                assert(is_in_lls(pid, post.used_lists) || is_in_lls(pid, post.unused_lists));
-            } else {
-                assert(is_in_lls(pid, pre.used_lists) || is_in_lls(pid, pre.unused_lists));
-                if is_in_lls(pid, pre.used_lists) {
-                    assert(is_in_lls(pid, post.used_lists));
-                } else {
-                    assert(is_in_lls(pid, pre.unused_lists));
-                    assert(is_in_lls(pid, post.unused_lists));
-                }
-            }
-        }
+//        assert forall |pid: PageId| #[trigger] post.pages.dom().contains(pid)
+//            && post.pages[pid].offset == Some(0nat)
+//            && pid.idx != 0
+//            && !post.expect_out_of_lists(pid)
+//              implies is_in_lls(pid, post.used_lists) || is_in_lls(pid, post.unused_lists)
+//        by {
+//            if pid == page_id {
+////                assert(is_in_lls(pid, post.used_lists) || is_in_lls(pid, post.unused_lists));
+//            } else {
+////                assert(is_in_lls(pid, pre.used_lists) || is_in_lls(pid, pre.unused_lists));
+//                if is_in_lls(pid, pre.used_lists) {
+////                    assert(is_in_lls(pid, post.used_lists));
+//                } else {
+////                    assert(is_in_lls(pid, pre.unused_lists));
+////                    assert(is_in_lls(pid, post.unused_lists));
+//                }
+//            }
+//        }
     }
 
     pub proof fn ll_inv_exists_merge_with_before(pre: Self, post: Self, page_id: PageId, sbin_idx: int, list_idx: int)
@@ -3310,24 +3310,24 @@ state_machine!{ PageOrg {
         //    pre.unused_lists.update(sbin_idx, pre.unused_lists[sbin_idx].remove(list_idx)));
         //assert(forall |pid| pid != page_id && is_in_lls(pid, pre.unused_lists) ==> is_in_lls(pid, post.unused_lists));
         reveal(State::ll_inv_exists_in_some_list);
-        assert forall |pid: PageId| #[trigger] post.pages.dom().contains(pid)
-            && post.pages[pid].offset == Some(0nat)
-            && pid.idx != 0
-            && !post.expect_out_of_lists(pid)
-              implies is_in_lls(pid, post.used_lists) || is_in_lls(pid, post.unused_lists)
-        by {
-            if pid == page_id {
-                assert(is_in_lls(pid, post.used_lists) || is_in_lls(pid, post.unused_lists));
-            } else {
-                assert(is_in_lls(pid, pre.used_lists) || is_in_lls(pid, pre.unused_lists));
-                if is_in_lls(pid, pre.used_lists) {
-                    assert(is_in_lls(pid, post.used_lists));
-                } else {
-                    assert(is_in_lls(pid, pre.unused_lists));
-                    assert(is_in_lls(pid, post.unused_lists));
-                }
-            }
-        }
+//        assert forall |pid: PageId| #[trigger] post.pages.dom().contains(pid)
+//            && post.pages[pid].offset == Some(0nat)
+//            && pid.idx != 0
+//            && !post.expect_out_of_lists(pid)
+//              implies is_in_lls(pid, post.used_lists) || is_in_lls(pid, post.unused_lists)
+//        by {
+//            if pid == page_id {
+////                assert(is_in_lls(pid, post.used_lists) || is_in_lls(pid, post.unused_lists));
+//            } else {
+////                assert(is_in_lls(pid, pre.used_lists) || is_in_lls(pid, pre.unused_lists));
+//                if is_in_lls(pid, pre.used_lists) {
+////                    assert(is_in_lls(pid, post.used_lists));
+//                } else {
+////                    assert(is_in_lls(pid, pre.unused_lists));
+////                    assert(is_in_lls(pid, post.unused_lists));
+//                }
+//            }
+//        }
     }
 
 
@@ -3348,7 +3348,7 @@ state_machine!{ PageOrg {
         pre.get_stuff_before();
         pre.lemma_range_not_used(page_id);
 
-        assert(post.popped_basics());
+//        assert(post.popped_basics());
         let sbin_idx = smallest_sbin_fitting_size(p_count as int);
         let list_idx = Self::get_list_idx(pre.unused_lists, page_id).1;
         pre.unused_is_in_sbin(page_id);
@@ -3362,14 +3362,14 @@ state_machine!{ PageOrg {
         by {
             if i == sbin_idx && j >= list_idx {
                 pre.ll_unused_distinct(i, j+1, sbin_idx, list_idx);
-                assert(post.unused_lists[i][j] != page_id);
+//                assert(post.unused_lists[i][j] != page_id);
             } else {
                 pre.ll_unused_distinct(i, j, sbin_idx, list_idx);
-                assert(post.unused_lists[i][j] != page_id);
+//                assert(post.unused_lists[i][j] != page_id);
             }
-            assert(is_unused_header(pre.pages[post.unused_lists[i][j]]));
+//            assert(is_unused_header(pre.pages[post.unused_lists[i][j]]));
         }
-        assert(post.ll_inv_valid_unused2());
+//        assert(post.ll_inv_valid_unused2());
 
         Self::merge_with_before_ll_inv_valid_unused(pre, post);
         Self::merge_with_before_inductive_attached_ranges(pre, post);
@@ -3396,22 +3396,22 @@ state_machine!{ PageOrg {
 
         assert forall |i| 0 <= i < post.unused_lists.len() implies valid_ll(post.pages, post.unused_dlist_headers[i], post.unused_lists[i])
         by {
-            assert(valid_ll(pre.pages, pre.unused_dlist_headers[i], pre.unused_lists[i]));
+//            assert(valid_ll(pre.pages, pre.unused_dlist_headers[i], pre.unused_lists[i]));
             assert(valid_ll_i(pre.pages, pre.unused_lists[sbin_idx], list_idx));
             let pre_ll = pre.unused_lists[i];
             let ll = post.unused_lists[i];
             if i == sbin_idx {
-                assert(list_idx < pre_ll.len());
+//                assert(list_idx < pre_ll.len());
                 assert forall |j| 0 <= j < ll.len() implies valid_ll_i(post.pages, ll, j)
                 by {
                     if j < list_idx {
                         pre.ll_unused_distinct(i, j, i, list_idx);
-                        assert(ll[j] != page_id);
+//                        assert(ll[j] != page_id);
                         match dlist_entry.prev {
                             Some(pid) => {
                                 if j < list_idx - 1 {
                                     pre.ll_unused_distinct(i, j, i, list_idx - 1);
-                                    assert(ll[j] != pid);
+//                                    assert(ll[j] != pid);
                                 }
                             }
                             None => { }
@@ -3419,29 +3419,29 @@ state_machine!{ PageOrg {
                         match dlist_entry.next {
                             Some(pid) => {
                                 pre.ll_unused_distinct(i, j, i, list_idx + 1);
-                                assert(ll[j] != pid);
+//                                assert(ll[j] != pid);
                             }
                             None => { }
                         }
                         assert(valid_ll_i(pre.pages, pre_ll, j));
                         if j < list_idx - 1 {
-                            assert(valid_ll_i(post.pages, ll, j));
+//                            assert(valid_ll_i(post.pages, ll, j));
                         } else {
-                            assert(j == list_idx - 1);
+//                            assert(j == list_idx - 1);
                             if list_idx == pre_ll.len() - 1 {
-                                assert(valid_ll_i(post.pages, ll, j));
+//                                assert(valid_ll_i(post.pages, ll, j));
                             } else {
-                                assert(post.pages[ll[j]].dlist_entry.unwrap().next == get_next(ll, j));
-                                assert(valid_ll_i(post.pages, ll, j));
+//                                assert(post.pages[ll[j]].dlist_entry.unwrap().next == get_next(ll, j));
+//                                assert(valid_ll_i(post.pages, ll, j));
                             }
                         }
                     } else {
                         pre.ll_unused_distinct(i, j+1, i, list_idx);
-                        assert(ll[j] != page_id);
+//                        assert(ll[j] != page_id);
                         match dlist_entry.prev {
                             Some(pid) => {
                                 pre.ll_unused_distinct(i, j+1, sbin_idx, list_idx - 1);
-                                assert(ll[j] != pid);
+//                                assert(ll[j] != pid);
                             }
                             None => { }
                         }
@@ -3449,20 +3449,20 @@ state_machine!{ PageOrg {
                             Some(pid) => {
                                 if j > list_idx {
                                     pre.ll_unused_distinct(i, j+1, sbin_idx, list_idx + 1);
-                                    assert(ll[j] != pid);
+//                                    assert(ll[j] != pid);
                                 }
                             }
                             None => { }
                         }
                         assert(valid_ll_i(pre.pages, pre_ll, j + 1));
                         if j > list_idx {
-                            assert(valid_ll_i(post.pages, ll, j));
+//                            assert(valid_ll_i(post.pages, ll, j));
                         } else {
-                            assert(valid_ll_i(post.pages, ll, j));
+//                            assert(valid_ll_i(post.pages, ll, j));
                         }
                     }
                 }
-                assert(valid_ll(post.pages, post.unused_dlist_headers[i], post.unused_lists[i]));
+//                assert(valid_ll(post.pages, post.unused_dlist_headers[i], post.unused_lists[i]));
             } else {
                 assert forall |j| 0 <= j < ll.len() implies valid_ll_i(post.pages, ll, j)
                 by {
@@ -3470,20 +3470,20 @@ state_machine!{ PageOrg {
                     match dlist_entry.prev {
                         Some(pid) => {
                             pre.ll_unused_distinct(i, j, sbin_idx, list_idx - 1);
-                            assert(ll[j] != pid);
+//                            assert(ll[j] != pid);
                         }
                         None => { }
                     }
                     match dlist_entry.next {
                         Some(pid) => {
                             pre.ll_unused_distinct(i, j, sbin_idx, list_idx + 1);
-                            assert(ll[j] != pid);
+//                            assert(ll[j] != pid);
                         }
                         None => { }
                     }
                     assert(valid_ll_i(pre.pages, ll, j));
                 }
-                assert(valid_ll(post.pages, post.unused_dlist_headers[i], post.unused_lists[i]));
+//                assert(valid_ll(post.pages, post.unused_dlist_headers[i], post.unused_lists[i]));
             }
         }
     }
@@ -3507,7 +3507,7 @@ state_machine!{ PageOrg {
         pre.lemma_range_not_used(page_id);
 
         Self::attached_ranges_except(pre, post, segment_id);
-        assert(post.good_range0(segment_id));
+//        assert(post.good_range0(segment_id));
         Self::rec_merge_with_before(pre, post,
             pre.pages[PageId { segment_id, idx: 0 }].count.unwrap() as int, true);
     }
@@ -3515,7 +3515,7 @@ state_machine!{ PageOrg {
     #[inductive(segment_freeing_start)]
     fn segment_freeing_start_inductive(pre: Self, post: Self, segment_id: SegmentId) {
         Self::ucount_preserve_all(pre, post);
-        assert(post.popped_basics());
+//        assert(post.popped_basics());
         Self::unchanged_unused_ll(pre, post);
         Self::unchanged_used_ll(pre, post);
 
@@ -3566,47 +3566,47 @@ state_machine!{ PageOrg {
 
         assert forall |i| 0 <= i < post.used_lists.len() implies valid_ll(post.pages, post.used_dlist_headers[i], post.used_lists[i])
         by {
-            assert(valid_ll(pre.pages, pre.used_dlist_headers[i], pre.used_lists[i]));
+//            assert(valid_ll(pre.pages, pre.used_dlist_headers[i], pre.used_lists[i]));
             let pre_ll = pre.used_lists[i];
             let ll = post.used_lists[i];
             if i == bin_idx {
                 assert forall |j| 0 <= j < ll.len() implies valid_ll_i(post.pages, ll, j)
                 by {
                     if j == ll.len() - 1 {
-                        assert(valid_ll_i(post.pages, ll, j));
+//                        assert(valid_ll_i(post.pages, ll, j));
                     } else {
                         if j < ll.len() - 2 {
-                            assert(ll[j+1] != page_id);
+//                            assert(ll[j+1] != page_id);
                         }
                         assert(valid_ll_i(pre.pages, pre_ll, j));
                         if j == ll.len() - 2 {
-                            assert(valid_ll_i(post.pages, ll, j));
+//                            assert(valid_ll_i(post.pages, ll, j));
                         } else {
                             pre.ll_used_distinct(i, j, i, pre_ll.len() - 1);
-                            assert(ll[j] != ll[ll.len() - 2]);
-                            assert(valid_ll_i(post.pages, ll, j));
+//                            assert(ll[j] != ll[ll.len() - 2]);
+//                            assert(valid_ll_i(post.pages, ll, j));
                         }
                     }
                 }
-                assert(valid_ll(post.pages, post.used_dlist_headers[i], post.used_lists[i]));
+//                assert(valid_ll(post.pages, post.used_dlist_headers[i], post.used_lists[i]));
             } else {
                 assert forall |j| 0 <= j < ll.len() implies valid_ll_i(post.pages, ll, j)
                 by {
-                    assert(ll[j] != page_id);
+//                    assert(ll[j] != page_id);
                     match queue_last_page_id {
                         Some(pid) => {
                             pre.ll_used_distinct(i, j, bin_idx, pre.used_lists[bin_idx].len() - 1);
-                            assert(ll[j] != pid);
+//                            assert(ll[j] != pid);
                         }
                         None => { }
                     }
                     assert(valid_ll_i(pre.pages, ll, j));
                 }
-                assert(valid_ll(post.pages, post.used_dlist_headers[i], post.used_lists[i]));
+//                assert(valid_ll(post.pages, post.used_dlist_headers[i], post.used_lists[i]));
             }
         }
 
-        assert(valid_bin_idx(bin_idx) || bin_idx == BIN_FULL);
+//        assert(valid_bin_idx(bin_idx) || bin_idx == BIN_FULL);
 
         assert(post.attached_ranges()) by {
             Self::attached_ranges_except(pre, post, segment_id);
@@ -3660,10 +3660,10 @@ state_machine!{ PageOrg {
             post.valid_used_page(next_page_id, bin_idx, list_idx)
     {
         pre.used_ll_stuff(bin_idx, list_idx);
-        assert(valid_ll_i(pre.pages, pre.used_lists[bin_idx], list_idx));
+//        assert(valid_ll_i(pre.pages, pre.used_lists[bin_idx], list_idx));
         pre.ll_used_distinct(bin_idx, list_idx, bin_idx, list_idx + 1);
-        assert(next_page_id != page_id);
-        assert(post.pages[next_page_id].dlist_entry.is_Some());
+//        assert(next_page_id != page_id);
+//        assert(post.pages[next_page_id].dlist_entry.is_Some());
     }
 
     #[inductive(forget_about_first_page2)]
@@ -3708,25 +3708,25 @@ state_machine!{ PageOrg {
                 && self.pages[self.pages[self.used_lists[i][j]].dlist_entry.unwrap().next.unwrap()].is_used == true,
 
     {
-        assert(valid_ll(self.pages, self.used_dlist_headers[i], self.used_lists[i]));
+//        assert(valid_ll(self.pages, self.used_dlist_headers[i], self.used_lists[i]));
         assert(valid_ll_i(self.pages, self.used_lists[i], j));
         self.lemma_range_used(self.used_lists[i][j]);
         if self.pages[self.used_lists[i][j]].dlist_entry.unwrap().prev.is_some() {
             self.lemma_range_used(
               self.pages[self.used_lists[i][j]].dlist_entry.unwrap().prev.unwrap());
-            assert(self.pages.dom().contains(self.pages[self.used_lists[i][j]].dlist_entry.unwrap().prev.unwrap()));
-            assert(valid_ll_i(self.pages, self.used_lists[i], j - 1));
-            assert(self.pages[self.pages[self.used_lists[i][j]].dlist_entry.unwrap().prev.unwrap()].dlist_entry.is_some());
-            assert(self.pages[self.pages[self.used_lists[i][j]].dlist_entry.unwrap().prev.unwrap()].is_used == true);
+//            assert(self.pages.dom().contains(self.pages[self.used_lists[i][j]].dlist_entry.unwrap().prev.unwrap()));
+//            assert(valid_ll_i(self.pages, self.used_lists[i], j - 1));
+//            assert(self.pages[self.pages[self.used_lists[i][j]].dlist_entry.unwrap().prev.unwrap()].dlist_entry.is_some());
+//            assert(self.pages[self.pages[self.used_lists[i][j]].dlist_entry.unwrap().prev.unwrap()].is_used == true);
             self.ll_used_distinct(i, j, i, j-1);
         }
         if self.pages[self.used_lists[i][j]].dlist_entry.unwrap().next.is_some() {
-            assert(self.pages.dom().contains(self.pages[self.used_lists[i][j]].dlist_entry.unwrap().next.unwrap()));
+//            assert(self.pages.dom().contains(self.pages[self.used_lists[i][j]].dlist_entry.unwrap().next.unwrap()));
             self.lemma_range_used(
               self.pages[self.used_lists[i][j]].dlist_entry.unwrap().next.unwrap());
-            assert(valid_ll_i(self.pages, self.used_lists[i], j + 1));
-            assert(self.pages[self.pages[self.used_lists[i][j]].dlist_entry.unwrap().next.unwrap()].dlist_entry.is_some());
-            assert(self.pages[self.pages[self.used_lists[i][j]].dlist_entry.unwrap().next.unwrap()].is_used == true);
+//            assert(valid_ll_i(self.pages, self.used_lists[i], j + 1));
+//            assert(self.pages[self.pages[self.used_lists[i][j]].dlist_entry.unwrap().next.unwrap()].dlist_entry.is_some());
+//            assert(self.pages[self.pages[self.used_lists[i][j]].dlist_entry.unwrap().next.unwrap()].is_used == true);
             self.ll_used_distinct(i, j, i, j+1);
 
             if self.pages[self.used_lists[i][j]].dlist_entry.unwrap().prev.is_some() {
@@ -3758,7 +3758,7 @@ state_machine!{ PageOrg {
                 && self.pages[self.pages[self.unused_lists[i][j]].dlist_entry.unwrap().next.unwrap()].dlist_entry.is_some()
                 && self.pages[self.pages[self.unused_lists[i][j]].dlist_entry.unwrap().next.unwrap()].is_used == false,
     {
-        assert(valid_ll(self.pages, self.unused_dlist_headers[i], self.unused_lists[i]));
+//        assert(valid_ll(self.pages, self.unused_dlist_headers[i], self.unused_lists[i]));
         assert(valid_ll_i(self.pages, self.unused_lists[i], j));
         if j > 0 {
             self.ll_unused_distinct(i, j, i, j-1);
@@ -3862,26 +3862,26 @@ state_machine!{ PageOrg {
                 None => true,
             }),
     {
-        assert(valid_ll(self.pages, self.unused_dlist_headers[i], self.unused_lists[i]));
+//        assert(valid_ll(self.pages, self.unused_dlist_headers[i], self.unused_lists[i]));
         if self.popped.is_Ready() {
-            assert(self.unused_dlist_headers[i].first != Some(self.popped_page_id()));
-            assert(self.unused_dlist_headers[i].last != Some(self.popped_page_id()));
+//            assert(self.unused_dlist_headers[i].first != Some(self.popped_page_id()));
+//            assert(self.unused_dlist_headers[i].last != Some(self.popped_page_id()));
         }
         match self.unused_dlist_headers[i].last {
             Some(last_id) => {
               assert(valid_ll_i(self.pages, self.unused_lists[i], self.unused_lists[i].len() - 1));
-              assert(self.pages.dom().contains(last_id));
-              assert(is_unused_header(self.pages[last_id]));
-              assert(self.pages[last_id].dlist_entry.is_some());
+//              assert(self.pages.dom().contains(last_id));
+//              assert(is_unused_header(self.pages[last_id]));
+//              assert(self.pages[last_id].dlist_entry.is_some());
             }
             None => { }
         }
         match self.unused_dlist_headers[i].first {
             Some(first_id) => {
                 assert(valid_ll_i(self.pages, self.unused_lists[i], 0));
-                assert(self.pages.dom().contains(first_id));
-                assert(is_unused_header(self.pages[first_id]));
-                assert(self.pages[first_id].dlist_entry.is_some());
+//                assert(self.pages.dom().contains(first_id));
+//                assert(is_unused_header(self.pages[first_id]));
+//                assert(self.pages[first_id].dlist_entry.is_some());
             }
             None => { }
         }
@@ -3910,7 +3910,7 @@ state_machine!{ PageOrg {
                 None => true,
             }),
     {
-        assert(valid_ll(self.pages, self.used_dlist_headers[i], self.used_lists[i]));
+//        assert(valid_ll(self.pages, self.used_dlist_headers[i], self.used_lists[i]));
         if self.used_lists[i].len() > 0 {
             assert(valid_ll_i(self.pages, self.used_lists[i], 0));
             assert(valid_ll_i(self.pages, self.used_lists[i], self.used_lists[i].len() - 1));
@@ -3961,7 +3961,7 @@ state_machine!{ PageOrg {
             self.pages[page_id].count.is_some(),
             self.good_range_unused(page_id),
     {
-        assert(self.attached_ranges_segment(page_id.segment_id));
+//        assert(self.attached_ranges_segment(page_id.segment_id));
         match self.popped {
             Popped::SegmentCreating(sid) if sid == page_id.segment_id => {
             }
@@ -3989,7 +3989,7 @@ state_machine!{ PageOrg {
             self.pages[page_id].count.is_some(),
             self.good_range_used(page_id),
     {
-        assert(self.attached_ranges_segment(page_id.segment_id));
+//        assert(self.attached_ranges_segment(page_id.segment_id));
         match self.popped {
             Popped::SegmentCreating(sid) if sid == page_id.segment_id => {
             }
@@ -4024,15 +4024,15 @@ state_machine!{ PageOrg {
         reveal(State::attached_rec);
         let segment_id = page_id.segment_id;
         if idx == SLICES_PER_SEGMENT {
-            assert(self.pages[page_id].count.is_some());
-            assert(self.good_range_used(page_id));
+//            assert(self.pages[page_id].count.is_some());
+//            assert(self.good_range_used(page_id));
         } else if idx > SLICES_PER_SEGMENT {
         } else if Self::is_the_popped(segment_id, idx, self.popped) {
             let c = self.popped_len();
             let idx2 = idx + c;
             if idx == page_id.idx {
-                assert(self.pages[page_id].count.is_some());
-                assert(self.good_range_used(page_id));
+//                assert(self.pages[page_id].count.is_some());
+//                assert(self.good_range_used(page_id));
             } else {
                 /*match self.popped {
                     Popped::No => { assert(idx2 <= page_id.idx); }
@@ -4044,13 +4044,13 @@ state_machine!{ PageOrg {
                     Popped::ExtraCount(_) => { assert(idx2 <= page_id.idx); }
                 }*/
                 self.rec_lemma_range_used(page_id, idx + self.popped_len(), false);
-                assert(self.pages[page_id].count.is_some());
-                assert(self.good_range_used(page_id));
+//                assert(self.pages[page_id].count.is_some());
+//                assert(self.good_range_used(page_id));
             }
         } else {
             if idx == page_id.idx {
-                assert(self.pages[page_id].count.is_some());
-                assert(self.good_range_used(page_id));
+//                assert(self.pages[page_id].count.is_some());
+//                assert(self.good_range_used(page_id));
             } else {
                 let pid = PageId { segment_id: page_id.segment_id, idx: idx as nat };
                 if self.pages[page_id].is_used {
@@ -4058,8 +4058,8 @@ state_machine!{ PageOrg {
                 } else {
                     self.rec_lemma_range_used(page_id, idx + self.pages[pid].count.unwrap(), sp);
                 }
-                assert(self.pages[page_id].count.is_some());
-                assert(self.good_range_used(page_id));
+//                assert(self.pages[page_id].count.is_some());
+//                assert(self.good_range_used(page_id));
             }
         }
     }
@@ -4084,24 +4084,24 @@ state_machine!{ PageOrg {
         reveal(State::attached_rec);
         let segment_id = page_id.segment_id;
         if idx == SLICES_PER_SEGMENT {
-            assert(self.pages[page_id].count.is_some());
-            assert(self.good_range_unused(page_id));
+//            assert(self.pages[page_id].count.is_some());
+//            assert(self.good_range_unused(page_id));
         } else if idx > SLICES_PER_SEGMENT {
         } else if Self::is_the_popped(segment_id, idx, self.popped) {
             let c = self.popped_len();
             let idx2 = idx + c;
             if idx == page_id.idx {
-                assert(self.pages[page_id].count.is_some());
-                assert(self.good_range_unused(page_id));
+//                assert(self.pages[page_id].count.is_some());
+//                assert(self.good_range_unused(page_id));
             } else {
                 self.rec_lemma_range_not_used(page_id, idx + self.popped_len(), false);
-                assert(self.pages[page_id].count.is_some());
-                assert(self.good_range_unused(page_id));
+//                assert(self.pages[page_id].count.is_some());
+//                assert(self.good_range_unused(page_id));
             }
         } else {
             if idx == page_id.idx {
-                assert(self.pages[page_id].count.is_some());
-                assert(self.good_range_unused(page_id));
+//                assert(self.pages[page_id].count.is_some());
+//                assert(self.good_range_unused(page_id));
             } else {
                 let pid = PageId { segment_id: page_id.segment_id, idx: idx as nat };
                 if self.pages[page_id].is_used {
@@ -4109,8 +4109,8 @@ state_machine!{ PageOrg {
                 } else {
                     self.rec_lemma_range_not_used(page_id, idx + self.pages[pid].count.unwrap(), sp);
                 }
-                assert(self.pages[page_id].count.is_some());
-                assert(self.good_range_unused(page_id));
+//                assert(self.pages[page_id].count.is_some());
+//                assert(self.good_range_unused(page_id));
             }
         }
     }
@@ -4328,9 +4328,9 @@ state_machine!{ PageOrg {
     {
         if idx > 0 {
             self.ucount_sum_le(segment_id, idx - 1);
-            assert(self.ucount_sum(segment_id, idx) <= idx);
+//            assert(self.ucount_sum(segment_id, idx) <= idx);
         } else {
-            assert(self.ucount_sum(segment_id, idx) <= idx);
+//            assert(self.ucount_sum(segment_id, idx) <= idx);
         }
     }
 
@@ -4499,12 +4499,12 @@ state_machine!{ PageOrg {
     {
         if idx - 1 > page_id.idx {
             self.ucount_sum_eq0_inverse(page_id, idx - 1);
-            assert(!self.does_count(page_id));
+//            assert(!self.does_count(page_id));
         } else {
-            assert(idx - 1 == page_id.idx);
+//            assert(idx - 1 == page_id.idx);
             assert(self.ucount_sum(page_id.segment_id, idx - 1)
               + self.one_count(PageId { segment_id: page_id.segment_id, idx: (idx - 1) as nat }) == 0);
-            assert(!self.does_count(page_id));
+//            assert(!self.does_count(page_id));
         }
     }
 
@@ -4534,38 +4534,38 @@ state_machine!{ PageOrg {
     {
         assert forall |sid: SegmentId| sid != esid && #[trigger] post.segments.dom().contains(sid) implies post.attached_ranges_segment(sid)
         by {
-            assert(pre.segments.dom().contains(sid));
-            assert(pre.attached_ranges_segment(sid));
+//            assert(pre.segments.dom().contains(sid));
+//            assert(pre.attached_ranges_segment(sid));
             Self::attached_rec_same(pre, post, sid, 
                 pre.pages[PageId { segment_id: sid, idx: 0 }].count.unwrap() as int,
                 false);
-            assert(pre.good_range0(sid));
+//            assert(pre.good_range0(sid));
 
             let page_id = PageId { segment_id: sid, idx: 0 };
             let count = post.pages[page_id].count.unwrap();
-            assert forall |pid: PageId| 
-              #![trigger self.pages.dom().contains(pid)]
-              #![trigger self.pages.index(pid)]
-              pid.segment_id == page_id.segment_id
-              && page_id.idx <= pid.idx < page_id.idx + count implies
-                && post.pages[pid].is_used == false
-                && post.pages[pid].full.is_none()
-                && post.pages[pid].page_header_kind.is_none()
-                && (post.pages[pid].count.is_some() <==> pid == page_id)
-                && post.pages[pid].dlist_entry.is_none()
-                && post.pages[pid].offset == Some((pid.idx - page_id.idx) as nat)
-            by {
-                assert(pre.pages[pid].is_used == false);
-                //assert(post.pages[pid].is_used == false);
-                //assert(post.pages[pid].full.is_none());
-                //assert(post.pages[pid].page_header_kind.is_none());
-                //assert((post.pages[pid].count.is_some() <==> pid == page_id));
-                //assert(post.pages[pid].dlist_entry.is_none());
-                //assert(post.pages[pid].offset == Some((pid.idx - page_id.idx) as nat));
-
-            }
-            assert(post.good_range0(sid));
-            assert(post.attached_rec0(sid, false));
+//            assert forall |pid: PageId| 
+//              #![trigger self.pages.dom().contains(pid)]
+//              #![trigger self.pages.index(pid)]
+//              pid.segment_id == page_id.segment_id
+//              && page_id.idx <= pid.idx < page_id.idx + count implies
+//                && post.pages[pid].is_used == false
+//                && post.pages[pid].full.is_none()
+//                && post.pages[pid].page_header_kind.is_none()
+//                && (post.pages[pid].count.is_some() <==> pid == page_id)
+//                && post.pages[pid].dlist_entry.is_none()
+//                && post.pages[pid].offset == Some((pid.idx - page_id.idx) as nat)
+//            by {
+//                assert(pre.pages[pid].is_used == false);
+//                //assert(post.pages[pid].is_used == false);
+//                //assert(post.pages[pid].full.is_none());
+//                //assert(post.pages[pid].page_header_kind.is_none());
+//                //assert((post.pages[pid].count.is_some() <==> pid == page_id));
+//                //assert(post.pages[pid].dlist_entry.is_none());
+//                //assert(post.pages[pid].offset == Some((pid.idx - page_id.idx) as nat));
+//
+//            }
+//            assert(post.good_range0(sid));
+//            assert(post.attached_rec0(sid, false));
         }
     }
 
@@ -4618,22 +4618,22 @@ state_machine!{ PageOrg {
     {
         assert forall |segment_id: SegmentId| #[trigger] post.segments.dom().contains(segment_id) implies post.attached_ranges_segment(segment_id)
         by {
-            assert(pre.attached_ranges_segment(segment_id));
+//            assert(pre.attached_ranges_segment(segment_id));
             match pre.popped {
                 Popped::SegmentCreating(sid) if sid == segment_id => {
                     //assert(post.attached_ranges_segment(segment_id));
-                    assert(false);
+//                    assert(false);
                 }
                 Popped::SegmentFreeing(sid, idx) if sid == segment_id && idx > 0 => {
                     //Self::attached_rec_same(pre, post, segment_id, idx, false);
                     //assert(post.attached_ranges_segment(segment_id));
-                    assert(false);
+//                    assert(false);
                 }
                 _ => {
                     Self::attached_rec_same(pre, post, segment_id, 
                         pre.pages[PageId { segment_id, idx: 0 }].count.unwrap() as int,
                         pre.popped_for_seg(segment_id));
-                    assert(post.attached_ranges_segment(segment_id));
+//                    assert(post.attached_ranges_segment(segment_id));
                 }
             }
         }
@@ -4685,14 +4685,14 @@ state_machine!{ PageOrg {
     {
         reveal(State::attached_rec);
         if idx == SLICES_PER_SEGMENT {
-            assert(post.attached_rec(segment_id, idx, sp));
+//            assert(post.attached_rec(segment_id, idx, sp));
         } else if idx > SLICES_PER_SEGMENT {
-            assert(post.attached_rec(segment_id, idx, sp));
+//            assert(post.attached_rec(segment_id, idx, sp));
         } else if Self::is_the_popped(segment_id, idx, pre.popped) {
             Self::attached_rec_same(pre, post, segment_id, idx + pre.popped_len(), false);
-            assert(post.attached_rec(segment_id, idx, sp));
+//            assert(post.attached_rec(segment_id, idx, sp));
         } else {
-            assert(idx >= 0);
+//            assert(idx >= 0);
             let page_id = PageId { segment_id, idx: idx as nat };
             Self::attached_rec_same(pre, post, segment_id, idx + pre.pages[page_id].count.unwrap(), sp);
             //pre.good_range_disjoint_very_unready(page_id);
@@ -4746,7 +4746,7 @@ state_machine!{ PageOrg {
                     assert(post.attached_rec(segment_id, idx, sp));
                 }
             }*/
-            assert(post.attached_rec(segment_id, idx, sp));
+//            assert(post.attached_rec(segment_id, idx, sp));
         }
     }
 
@@ -4849,7 +4849,7 @@ state_machine!{ PageOrg {
                         self.rec_grd(segment_id, 
                             self.pages[PageId { segment_id, idx: 0 }].count.unwrap() as int, page_id);
                     } else {
-                        assert(false);
+//                        assert(false);
                     }
                 }
             }
@@ -4879,18 +4879,18 @@ state_machine!{ PageOrg {
         let pid = PageId { segment_id, idx: idx as nat };
         let lid = PageId { segment_id, idx: (idx as nat + self.pages[pid].count.unwrap() - 1) as nat };
         if idx == SLICES_PER_SEGMENT {
-            assert(false);
+//            assert(false);
         } else if idx > SLICES_PER_SEGMENT {
-            assert(false);
+//            assert(false);
         } else if Self::is_the_popped(segment_id, idx, self.popped) {
-            assert(false);
+//            assert(false);
         } else if idx == page_id.idx {
             self.sp_true_implies_le(idx + self.pages[pid].count.unwrap());
             //assert(self.pages[lid].offset.is_some());
-            assert(false);
+//            assert(false);
         } else {
             self.rec_grd(segment_id, idx + self.pages[pid].count.unwrap(), page_id);
-            assert(false);
+//            assert(false);
         }
     }
 
@@ -4926,7 +4926,7 @@ state_machine!{ PageOrg {
             if j1 > 0 && j2 > 0 {
                 self.ll_unused_distinct(i1, j1 - 1, i2, j2 - 1);
             } else {
-                assert(self.unused_lists[i1][j1] != self.unused_lists[i2][j2]);
+//                assert(self.unused_lists[i1][j1] != self.unused_lists[i2][j2]);
             }
         }
 
@@ -4946,9 +4946,9 @@ state_machine!{ PageOrg {
         if i1 != i2 {
             if valid_bin_idx(i1) && valid_bin_idx(i2) {
                 crate::bin_sizes::different_bin_size(i1, i2);
-                assert(self.used_lists[i1][j1] != self.used_lists[i2][j2]);
+//                assert(self.used_lists[i1][j1] != self.used_lists[i2][j2]);
             } else {
-                assert(self.used_lists[i1][j1] != self.used_lists[i2][j2]);
+//                assert(self.used_lists[i1][j1] != self.used_lists[i2][j2]);
             }
         } else {
             assert(valid_ll_i(self.pages, self.used_lists[i1], j1));
@@ -4956,7 +4956,7 @@ state_machine!{ PageOrg {
             if j1 > 0 && j2 > 0 {
                 self.ll_used_distinct(i1, j1 - 1, i2, j2 - 1);
             } else {
-                assert(self.used_lists[i1][j1] != self.used_lists[i2][j2]);
+//                assert(self.used_lists[i1][j1] != self.used_lists[i2][j2]);
             }
         }
     }

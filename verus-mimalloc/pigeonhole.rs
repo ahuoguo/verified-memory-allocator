@@ -37,15 +37,15 @@ proof fn set_mismatch(s1:Set<nat>, s2:Set<nat>, missing:nat)
 {
     if s1.len() == 1 {
         let elt = s2.choose();
-        assert(s2.contains(elt));
-        assert(s1.contains(elt));
+//        assert(s2.contains(elt));
+//        assert(s1.contains(elt));
         singleton_set_unique_elt(s1, elt, missing);
-        assert(elt == missing);
-        assert(false);
+//        assert(elt == missing);
+//        assert(false);
     } else {
         let elt = s2.choose();
-        assert(s2.contains(elt));
-        assert(s1.contains(elt));
+//        assert(s2.contains(elt));
+//        assert(s1.contains(elt));
         let s1_smaller = s1.remove(elt);
         set_mismatch(s1_smaller, s2.remove(elt), missing);
     }
@@ -132,7 +132,7 @@ pub proof fn pigeonhole_missing_idx_implies_double_helper(
             assert forall |elt| new_prev_vals.contains(elt) implies 0 <= elt < len && elt != missing by {
                 if prev_vals.contains(elt) {
                 } else {
-                    assert(elt == m[k]);
+//                    assert(elt == m[k]);
                     assert(m.dom().contains(k));
                 }
             };
@@ -162,10 +162,10 @@ pub proof fn pigeonhole_missing_idx_implies_double(
     })
 {
     assert(len >= 2) by {
-        assert(len >= 1);
+//        assert(len >= 1);
         if len == 1 {
             assert(m.dom().contains(0));
-            assert(m[0] != missing);
+//            assert(m[0] != missing);
         }
     };
     let dup2 = pigeonhole_missing_idx_implies_double_helper(m, missing, len, Set::empty(), 0);
