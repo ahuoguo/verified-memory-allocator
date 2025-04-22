@@ -884,8 +884,8 @@ impl LL {
 //        assert((extend - i) * bsize == (extend - (i + 1)) * bsize + bsize) by(nonlinear_arith);
         assert(bsize <= (extend - i) * bsize)
             by(nonlinear_arith) requires bsize >= 0, extend - i >= 1;
-        assert(i * bsize + bsize <= extend * bsize)
-            by(nonlinear_arith) requires bsize >= 0, extend - i >= 1;
+//        assert(i * bsize + bsize <= extend * bsize)
+//            by(nonlinear_arith) requires bsize >= 0, extend - i >= 1;
 //        assert(block + bsize <= start as int + extend * bsize);
         assert(i == extend - 1) by {
             if i < extend - 1 {
@@ -928,7 +928,7 @@ impl LL {
 //                    assert(self.perms@.index(j) == old(self).perms@.index(j));
 
                     if j > 0 {
-                        assert(old(self).valid_node((j-1) as nat, old(self).next_ptr((j-1) as nat)));
+//                        assert(old(self).valid_node((j-1) as nat, old(self).next_ptr((j-1) as nat)));
 //                        assert(self.perms@.index((j-1) as nat) == old(self).perms@.index((j-1) as nat));
 //                        assert(self.perms@.index((j - 1) as nat)
 //                            == old(self).perms@.index((j - 1) as nat));

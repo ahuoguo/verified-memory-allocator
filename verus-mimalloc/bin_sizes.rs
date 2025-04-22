@@ -568,7 +568,7 @@ proof fn pow2_properties()
         forall |e1, e2| 0 <= e1 <= e2 ==> pow2(e2) / pow2(e1) == #[trigger] pow2(e2 - e1),
 {
 
-    assert forall |e:int| pow2(e) > 0 by { pow2_positive(e); }
+//    assert forall |e:int| pow2(e) > 0 by { pow2_positive(e); }
     assert forall |e:int| e > 0 implies #[trigger] pow2(e) / 2 == pow2(e - 1) by {
 //        assert(pow2(1) == 2) by (compute_only);
         pow2_subtracts(1, e as nat);
@@ -1137,21 +1137,21 @@ pub fn bin(size: usize) -> (bin_idx: u8)
         // This isn't true with this limited context, b/c we need to know how w and b scale relative to each other
 //        assert((w >> sub(b as u64, 2)) < 256) by (bit_vector)
 //            requires 8 <= w < 131072 && 3 <= b <= 17;
-        assert(w >> ((b as u64 - 2) as u64) <= 8) by {
-//            assert(w < pow2((log2_w + 1) as int));
-            assert(pow2((log2_w - 2) as int) > 0) by { pow2_properties(); }
-            assert(w as nat / pow2((log2_w - 2) as int) <= 
-                    pow2((log2_w + 1) as int) / pow2((log2_w - 2) as int)) by { 
-                lemma_div_is_ordered(w as int, 
-                                     pow2((log2_w + 1) as int) as int, 
-                                     pow2((log2_w - 2) as int) as int); 
-            }
-            assert(pow2((log2_w + 1) as int) / pow2((log2_w - 2) as int) == pow2(3)) by { 
-                pow2_subtracts((log2_w - 2) as nat, log2_w + 1); 
-            }
-            assert(pow2(3) == 8) by (compute_only);
-            shift_is_div(w, ((b as u64 - 2) as u64));
-        }
+//        assert(w >> ((b as u64 - 2) as u64) <= 8) by {
+////            assert(w < pow2((log2_w + 1) as int));
+//            assert(pow2((log2_w - 2) as int) > 0) by { pow2_properties(); }
+//            assert(w as nat / pow2((log2_w - 2) as int) <= 
+//                    pow2((log2_w + 1) as int) / pow2((log2_w - 2) as int)) by { 
+//                lemma_div_is_ordered(w as int, 
+//                                     pow2((log2_w + 1) as int) as int, 
+//                                     pow2((log2_w - 2) as int) as int); 
+//            }
+//            assert(pow2((log2_w + 1) as int) / pow2((log2_w - 2) as int) == pow2(3)) by { 
+//                pow2_subtracts((log2_w - 2) as nat, log2_w + 1); 
+//            }
+//            assert(pow2(3) == 8) by (compute_only);
+//            shift_is_div(w, ((b as u64 - 2) as u64));
+//        }
 //        assert((w >> sub(b as u64, 2)) < 256);
 
         let shifted = (w >> (b as u64 - 2)) as u8;

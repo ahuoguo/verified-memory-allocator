@@ -458,7 +458,7 @@ impl CommitMask {
                 ofs = 0;
                 i += 1;
                 proof {
-                    assert(forall|a: u64| a << 0u64 == a) by (bit_vector);
+//                    assert(forall|a: u64| a << 0u64 == a) by (bit_vector);
                     let oi   = oi@;
                     let obc  = obc@;
                     let oofs = oofs@;

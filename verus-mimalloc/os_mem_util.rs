@@ -886,7 +886,7 @@ pub proof fn preserves_mem_chunk_on_set_used(local1: Local, local2: Local, page_
             }*/
         } else {
             assert(local1.segment_page_used(sid, pid).contains(addr));
-            assert(local1.segment_pages_used_total(sid).contains(addr));
+//            assert(local1.segment_pages_used_total(sid).contains(addr));
 //            assert(commit_bytes.contains(addr) && !decommit_bytes.contains(addr));
         }
     }

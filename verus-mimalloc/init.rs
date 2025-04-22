@@ -725,7 +725,7 @@ fn init_empty_page_ptr() -> (e: EmptyPageStuff)
 
 //    assert(set_int_range(pt as int, pt as int + 4096) <= mc.range_os_rw());
 //    assert(set_int_range(pt as int, pt as int + 4096) <= mc.range_points_to());
-    assert(mc.pointsto_has_range(pt as int, 4096));
+//    assert(mc.pointsto_has_range(pt as int, 4096));
 //    assert(mc.pointsto_has_range(pt as int, SIZEOF_PAGE_HEADER as int));
     let tracked points_to_raw = mc.take_points_to_range(pt as int, SIZEOF_PAGE_HEADER as int);
     proof {

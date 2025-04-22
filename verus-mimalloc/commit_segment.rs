@@ -258,14 +258,14 @@ fn segment_commitx(
             }
 //            assert(local.wf_main());
 
-            assert forall |j: int| set_int_range(p as int, p + size).contains(j)
-                implies local.commit_mask(sid).bytes(sid).contains(j)
-            by {
-//                assert(segment_start(sid) == segment.segment_ptr.addr());
-                let k = (j - segment_start(sid)) / COMMIT_SIZE as int;
-                assert(mask@.contains(k));
-                reveal(CommitMask::bytes);
-            }
+//            assert forall |j: int| set_int_range(p as int, p + size).contains(j)
+//                implies local.commit_mask(sid).bytes(sid).contains(j)
+//            by {
+////                assert(segment_start(sid) == segment.segment_ptr.addr());
+//                let k = (j - segment_start(sid)) / COMMIT_SIZE as int;
+////                assert(mask@.contains(k));
+//                reveal(CommitMask::bytes);
+//            }
             assert(set_int_range(p as int, p + size) <= local.commit_mask(segment.segment_id@).bytes(segment.segment_id@) - local.decommit_mask(segment.segment_id@).bytes(segment.segment_id@)) by { reveal(CommitMask::bytes); };
         } else {
             assert forall |sid1| sid1 != sid && old(local).mem_chunk_good(sid1)
