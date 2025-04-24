@@ -28,10 +28,10 @@ use crate::linked_list::ThreadLLWithDelayBits;
 use crate::init::current_thread_count;
 
 verus!{
-    broadcast use vstd::seq_lib::group_seq_properties,
-    vstd::map_lib::group_map_properties,
-    vstd::set_lib::group_set_properties,
-    vstd::multiset::group_multiset_properties;
+//    broadcast use vstd::seq_lib::group_seq_properties,
+//    vstd::map_lib::group_map_properties,
+//    vstd::set_lib::group_set_properties,
+//    vstd::multiset::group_multiset_properties;
 
 pub open spec fn good_count_for_block_size(block_size: int, count: int) -> bool {
     count * SLICE_SIZE < block_size * 0x10000

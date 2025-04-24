@@ -16,10 +16,10 @@ use crate::config::INTPTR_SIZE;
 use core::intrinsics::unlikely;
 
 verus!{
-    broadcast use vstd::seq_lib::group_seq_properties,
-    vstd::map_lib::group_map_properties,
-    vstd::set_lib::group_set_properties,
-    vstd::multiset::group_multiset_properties;
+//    broadcast use vstd::seq_lib::group_seq_properties,
+//    vstd::map_lib::group_map_properties,
+//    vstd::set_lib::group_set_properties,
+//    vstd::multiset::group_multiset_properties;
 
 // Originally I wanted to do a linked list here in the proper Rust-idiomatic
 // way, something like:

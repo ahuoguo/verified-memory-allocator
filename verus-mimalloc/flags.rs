@@ -8,10 +8,10 @@ use vstd::cell::*;
 use crate::types::*;
 
 verus!{
-    broadcast use vstd::seq_lib::group_seq_properties,
-    vstd::map_lib::group_map_properties,
-    vstd::set_lib::group_set_properties,
-    vstd::multiset::group_multiset_properties;
+//    broadcast use vstd::seq_lib::group_seq_properties,
+//    vstd::map_lib::group_map_properties,
+//    vstd::set_lib::group_set_properties,
+//    vstd::multiset::group_multiset_properties;
 
 pub closed spec fn flags0_is_reset(u: u8) -> bool { u & 1 != 0 }
 pub closed spec fn flags0_is_committed(u: u8) -> bool { u & 2 != 0 }
