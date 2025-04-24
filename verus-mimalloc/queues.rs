@@ -21,10 +21,10 @@ use crate::commit_segment::*;
 use crate::segment::good_count_for_block_size;
 
 verus!{
-    broadcast use vstd::seq_lib::group_seq_properties,
-    vstd::map_lib::group_map_properties,
-    vstd::set_lib::group_set_properties,
-    vstd::multiset::group_multiset_properties;
+//    broadcast use vstd::seq_lib::group_seq_properties,
+//    vstd::map_lib::group_map_properties,
+//    vstd::set_lib::group_set_properties,
+//    vstd::multiset::group_multiset_properties;
 
    
 #[verifier::spinoff_prover]

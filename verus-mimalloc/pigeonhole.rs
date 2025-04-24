@@ -5,10 +5,10 @@ use vstd::set_lib::*;
 use vstd::assert_by_contradiction;
 
 verus!{
-    broadcast use vstd::seq_lib::group_seq_properties,
-    vstd::map_lib::group_map_properties,
-    vstd::set_lib::group_set_properties,
-    vstd::multiset::group_multiset_properties;
+//    broadcast use vstd::seq_lib::group_seq_properties,
+//    vstd::map_lib::group_map_properties,
+//    vstd::set_lib::group_set_properties,
+//    vstd::multiset::group_multiset_properties;
 
 // TODO: This belongs in set_lib
 proof fn singleton_set_unique_elt<T>(s: Set<T>, a:T, b:T)

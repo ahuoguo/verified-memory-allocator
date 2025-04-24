@@ -86,10 +86,10 @@ use crate::config::*;
 // The max # of slices is SLICES_PER_SEGMENT (512) which goes in bin 31.
 
 verus!{
-    broadcast use vstd::seq_lib::group_seq_properties,
-    vstd::map_lib::group_map_properties,
-    vstd::set_lib::group_set_properties,
-    vstd::multiset::group_multiset_properties;
+//    broadcast use vstd::seq_lib::group_seq_properties,
+//    vstd::map_lib::group_map_properties,
+//    vstd::set_lib::group_set_properties,
+//    vstd::multiset::group_multiset_properties;
 
     
 // TODO: Pulled in constants to make this a standalone file
