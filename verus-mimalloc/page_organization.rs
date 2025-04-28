@@ -9,6 +9,10 @@ use crate::config::*;
 use crate::bin_sizes::{valid_sbin_idx, smallest_sbin_fitting_size, smallest_bin_fitting_size, valid_bin_idx, size_of_bin};
 
 verus!{
+    broadcast use vstd::seq_lib::group_seq_properties,
+    vstd::map_lib::group_map_properties,
+    vstd::set_lib::group_set_properties,
+    vstd::multiset::group_multiset_properties;
 
 pub ghost struct DlistHeader {
     pub first: Option<PageId>,

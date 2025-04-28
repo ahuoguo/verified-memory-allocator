@@ -24,6 +24,10 @@ use crate::os_mem::*;
 use crate::thread::*;
 
 verus!{
+    broadcast use vstd::seq_lib::group_seq_properties,
+    vstd::map_lib::group_map_properties,
+    vstd::set_lib::group_set_properties,
+    vstd::multiset::group_multiset_properties;
 
 pub tracked struct Global {
     pub(crate) tracked instance: Mim::Instance,
