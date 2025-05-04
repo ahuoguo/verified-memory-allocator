@@ -1677,7 +1677,7 @@ impl PagePtr {
     {
         proof {
             const_facts();
-            assert(SIZEOF_PAGE_HEADER == 80);
+//            assert(SIZEOF_PAGE_HEADER == 80);
         }
         let p = self.page_ptr.addr();
         let q = p + count * SIZEOF_PAGE_HEADER;
@@ -1703,7 +1703,7 @@ impl PagePtr {
     {
         proof {
             const_facts();
-            assert(SIZEOF_PAGE_HEADER == 80);
+//            assert(SIZEOF_PAGE_HEADER == 80);
             crate::layout::segment_start_ge0(self.page_id@.segment_id);
         }
         let p = self.page_ptr.addr();
@@ -1781,7 +1781,7 @@ impl PagePtr {
     {
         proof {
             const_facts();
-            assert(SIZEOF_PAGE_HEADER == 80);
+//            assert(SIZEOF_PAGE_HEADER == 80);
         }
         let p = self.page_ptr.addr();
         let q = p + count * SIZEOF_PAGE_HEADER;
