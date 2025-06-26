@@ -529,6 +529,7 @@ proof fn pow2_adds(e1:nat, e2:nat)
     decreases e1,        
 {
     if e1 == 0 {
+        assert(pow2(e1 as int) == 1);
     } else {
         calc! { (==)
             pow2(e1 as int) * pow2(e2 as int); {}
@@ -662,7 +663,7 @@ proof fn leading_zeros_between_powers_of_2(i: u64, exp: nat)
 {
     reveal(u64_leading_zeros);
     if exp == 1 {
-//        assert(pow2(1) == 2 && pow2(2) == 4) by (compute_only);
+        assert(pow2(1) == 2 && pow2(2) == 4) by (compute_only);
 //        assert(2 <= i < 4);
 //        assert(u64_leading_zeros(2) == 64 - 1 - 1) by (compute_only);
         assert(u64_leading_zeros(3) == 64 - 1 - 1) by (compute_only);
